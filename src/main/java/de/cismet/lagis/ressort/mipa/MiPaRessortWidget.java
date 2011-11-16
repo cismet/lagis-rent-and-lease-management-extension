@@ -5,14 +5,20 @@
  */
 package de.cismet.lagis.ressort.mipa;
 
+import com.vividsolutions.jts.geom.Geometry;
 import de.cismet.cismap.commons.features.Feature;
+import de.cismet.cismap.commons.features.FeatureCollection;
 import de.cismet.cismap.commons.features.FeatureCollectionEvent;
 import de.cismet.cismap.commons.features.FeatureCollectionListener;
+import de.cismet.cismap.commons.features.StyledFeature;
 import de.cismet.cismap.commons.gui.MappingComponent;
+import de.cismet.cismap.commons.gui.StyledFeatureGroupWrapper;
 import de.cismet.lagis.broker.EJBroker;
 import de.cismet.lagis.broker.LagisBroker;
 import de.cismet.lagis.editor.DateEditor;
 import de.cismet.lagis.gui.checkbox.JCheckBoxList;
+import de.cismet.lagis.gui.copypaste.Copyable;
+import de.cismet.lagis.gui.copypaste.Pasteable;
 import de.cismet.lagis.interfaces.FeatureSelectionChangedListener;
 import de.cismet.lagis.interfaces.FlurstueckChangeListener;
 import de.cismet.lagis.interfaces.FlurstueckSaver;
@@ -25,6 +31,7 @@ import de.cismet.lagis.utillity.GeometrySlotInformation;
 import de.cismet.lagis.validation.Validatable;
 import de.cismet.lagis.validation.Validator;
 import de.cismet.lagis.widget.AbstractWidget;
+import de.cismet.lagisEE.entity.basic.BasicEntity;
 import de.cismet.lagisEE.entity.core.Flurstueck;
 import de.cismet.lagisEE.entity.core.FlurstueckSchluessel;
 import de.cismet.lagisEE.entity.core.hardwired.FlurstueckArt;
@@ -45,14 +52,17 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -78,7 +88,19 @@ import org.jdesktop.swingx.decorator.SortOrder;
  *
  * @author  Sebastian Puhl
  */
-public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChangeListener, FlurstueckSaver, MouseListener, ListSelectionListener, ItemListener, GeometrySlotProvider, FeatureSelectionChangedListener, FeatureCollectionListener,TableModelListener {
+public class MiPaRessortWidget
+extends AbstractWidget 
+implements FlurstueckChangeListener, 
+           FlurstueckSaver, 
+           MouseListener, 
+           ListSelectionListener, 
+           ItemListener, 
+           GeometrySlotProvider, 
+           FeatureSelectionChangedListener, 
+           FeatureCollectionListener,
+           TableModelListener,
+           Copyable,
+           Pasteable{
 
     private final Logger log = org.apache.log4j.Logger.getLogger(this.getClass());
     private boolean isFlurstueckEditable = true;
@@ -91,8 +113,15 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private ImageIcon icoExistingContract = new javax.swing.ImageIcon(getClass().getResource("/de/cismet/lagis/ressource/icons/toolbar/contract.png"));
     private JComboBox cbxAuspraegung = new JComboBox();
     private boolean ignoreFeatureSelectionEvent = false;
+    private final Icon copyDisplayIcon;
+    
+    private static final String WIDGET_ICON = "/de/cismet/lagis/ressort/mipa/icons/mipa.png";
+    
     private final ActionListener cboAuspraegungsActionListener = new ActionListener() {
 
+        
+
+        
         public void actionPerformed(ActionEvent event) {
 //                log.debug("Action Performed CboAusprägung");                
 //                if ((event.getModifiers() & InputEvent.BUTTON1_MASK) != 0 && event.getActionCommand().equals("comboBoxChanged") && (cbxAuspraegung.getSelectedItem() != null && !(cbxAuspraegung.getSelectedItem() instanceof String) && (cbxAuspraegung.getSelectedItem() instanceof MiPaKategorieAuspraegung))) {                                        
@@ -104,8 +133,12 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
 //                }
         }
         };
+    
+    public MiPaRessortWidget(final String widgetName) 
+    {
+        this(widgetName, WIDGET_ICON);
+    }
 
-    /** Creates new form MiPaRessortWidget */
     public MiPaRessortWidget(String widgetName, String iconPath) {
         initComponents();
         setWidgetName(widgetName);
@@ -113,8 +146,13 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         configureComponents();
         configBackgroundThread();
         setOpaqueRecursive(panBackground.getComponents());
+        
+        this.copyDisplayIcon = new ImageIcon(this.getClass().getResource(WIDGET_ICON));
     }
 
+    
+    
+    
     private void setOpaqueRecursive(Component[] components) {
         for (Component currentComp : components) {
             if (currentComp instanceof Container) {
@@ -338,14 +376,22 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                     EventQueue.invokeLater(new Runnable() {
 
                         public void run() {
-                            Vector<Feature> features = miPaModel.getAllMiPaFeatures();
+                            Vector<Feature>         features          = miPaModel.getAllMiPaFeatures();
+                            final MappingComponent  mappingComp       = LagisBroker.getInstance().getMappingComponent();
+                            final FeatureCollection featureCollection = mappingComp.getFeatureCollection();
                             if (features != null) {
                                 for (Feature currentFeature : features) {
                                     if (currentFeature != null) {
                                         if (isWidgetReadOnly()) {
                                             ((MiPa) currentFeature).setModifiable(false);
                                         }
-                                        LagisBroker.getInstance().getMappingComponent().getFeatureCollection().addFeature(currentFeature);
+                                        
+                                        currentFeature = new StyledFeatureGroupWrapper((StyledFeature) currentFeature, 
+                                                                                        PROVIDER_NAME, 
+                                                                                        PROVIDER_NAME);
+                                        
+                                        
+                                        featureCollection.addFeature(currentFeature);
                                     }
                                 }
                             }
@@ -664,6 +710,39 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         return PROVIDER_NAME;
     }
 
+    
+    private String getIdentifierString(final MiPa mipa)
+    {
+        String idValue1 = mipa.getLage();
+        MiPaNutzung idValue2 = mipa.getMiPaNutzung();
+
+        StringBuffer identifier = new StringBuffer();
+
+        if (idValue1 != null) {
+            identifier.append(idValue1);
+        } else {
+            identifier.append("keine Lage");
+        }
+
+        if (idValue2 != null && idValue2.getMiPaKategorie() != null) {
+            identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + idValue2.getMiPaKategorie());
+        } else {
+            identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + "keine Nutzung");
+        }
+
+        if (idValue2 != null && (idValue2.getAusgewaehlteNummer() != null || idValue2.getAusgewaehlteAuspraegung() != null)) {
+            if (idValue2.getAusgewaehlteNummer() != null) {
+                identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + "Nr. " + idValue2.getAusgewaehlteNummer());
+            } else {
+                identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + idValue2.getAusgewaehlteAuspraegung());
+            }
+        } else {
+            identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + "keine Ausprägung");
+        }
+
+        return identifier.toString();
+    }
+    
     public Vector<GeometrySlotInformation> getSlotInformation() {
         //VerwaltungsTableModel tmp = (VerwaltungsTableModel) tNutzung.getModel();
         Vector<GeometrySlotInformation> result = new Vector<GeometrySlotInformation>();
@@ -675,33 +754,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 MiPa currentMiPa = miPaModel.getMiPaAtRow(i);
                 //Geom geom;
                 if (currentMiPa.getGeometry() == null) {
-                    String idValue1 = currentMiPa.getLage();
-                    MiPaNutzung idValue2 = currentMiPa.getMiPaNutzung();
-
-                    StringBuffer identifier = new StringBuffer();
-
-                    if (idValue1 != null) {
-                        identifier.append(idValue1);
-                    } else {
-                        identifier.append("keine Lage");
-                    }
-
-                    if (idValue2 != null && idValue2.getMiPaKategorie() != null) {
-                        identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + idValue2.getMiPaKategorie());
-                    } else {
-                        identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + "keine Nutzung");
-                    }
-
-                    if (idValue2 != null && (idValue2.getAusgewaehlteNummer() != null || idValue2.getAusgewaehlteAuspraegung() != null)) {
-                        if (idValue2.getAusgewaehlteNummer() != null) {
-                            identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + "Nr. " + idValue2.getAusgewaehlteNummer());
-                        } else {
-                            identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + idValue2.getAusgewaehlteAuspraegung());
-                        }
-                    } else {
-                        identifier.append(GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR + "keine Ausprägung");
-                    }
-                    result.add(new GeometrySlotInformation(getProviderName(), identifier.toString(), currentMiPa, this));
+                    result.add(new GeometrySlotInformation(getProviderName(), this.getIdentifierString(currentMiPa), currentMiPa, this));
                 }
             }
             return result;
@@ -1233,4 +1286,137 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private javax.swing.JTextArea taBemerkung;
     private javax.swing.JTable tblMipa;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public List<BasicEntity> getCopyData() 
+    {
+        final Vector<MiPa> allMiPas = this.miPaModel.getAllMiPas();
+        final ArrayList<BasicEntity> result = new ArrayList<BasicEntity>(allMiPas.size());
+
+        MiPa tmp;
+        for (final MiPa mipa : allMiPas) 
+        {
+            tmp = new MiPa();
+
+            tmp.setAktenzeichen(mipa.getAktenzeichen());
+            tmp.setBemerkung(mipa.getBemerkung());
+            tmp.setCanBeSelected(mipa.canBeSelected());
+            tmp.setEditable(mipa.isEditable());
+            tmp.setFillingPaint(mipa.getFillingPaint());
+            tmp.setFlaeche(mipa.getFlaeche());
+            
+            final Geometry geom = mipa.getGeometry();
+            if (geom != null) {
+                tmp.setGeometry((Geometry)geom.clone());
+            }
+
+            tmp.setHighlightingEnabled(mipa.isHighlightingEnabled());
+            tmp.setLage(mipa.getLage());
+            tmp.setLinePaint(mipa.getLinePaint());
+            tmp.setLineWidth(mipa.getLineWidth());
+            tmp.setMiPaMerkmal(mipa.getMiPaMerkmal());
+            tmp.setMiPaNutzung(mipa.getMiPaNutzung());
+            tmp.setModifiable(mipa.isModifiable());
+            tmp.setNutzer(mipa.getNutzer());
+            tmp.setNutzung(mipa.getNutzung());
+            tmp.setPointAnnotationSymbol(mipa.getPointAnnotationSymbol());
+            tmp.setTransparency(mipa.getTransparency());
+            tmp.setVertragsbeginn(mipa.getVertragsbeginn());
+            tmp.setVertragsende(mipa.getVertragsende());
+            tmp.hide(mipa.isHidden());
+            
+            result.add(tmp);
+        }
+
+        return result;
+    }
+
+    @Override
+    public void paste(BasicEntity item) 
+    {
+        if (item == null) {
+            throw new NullPointerException("Given data item must not be null");
+        }
+
+        if (item instanceof MiPa) {
+            final Vector<MiPa> residentMiPas = this.miPaModel.getAllMiPas();
+
+            if (residentMiPas.contains(item)) {
+                log.warn("MiPa " + item + " does already exist in Flurstück " + this.currentFlurstueck);
+            } else {
+                this.miPaModel.addMiPa((MiPa)item);
+                
+                final MappingComponent mc = LagisBroker.getInstance().getMappingComponent();
+                final Feature f = new StyledFeatureGroupWrapper((StyledFeature)item, PROVIDER_NAME, PROVIDER_NAME);
+                mc.getFeatureCollection().addFeature(f);
+                mc.setGroupLayerVisibility(PROVIDER_NAME, true);
+                
+                this.miPaModel.fireTableDataChanged();
+            }
+        }
+    }
+
+    @Override
+    public void pasteAll(List<BasicEntity> dataList) 
+    {
+        if (dataList == null) {
+            throw new NullPointerException("Given list of MiPa items must not be null");
+        }
+
+        if (dataList.isEmpty()) {
+            return;
+        }
+
+        final Vector<MiPa> residentMiPas = this.miPaModel.getAllMiPas();
+        final int rowCountBefore = this.miPaModel.getRowCount();
+
+        
+        Feature f;
+        final MappingComponent  mc = LagisBroker.getInstance().getMappingComponent();
+        final FeatureCollection featCollection = mc.getFeatureCollection();
+        
+        for (final BasicEntity entity : dataList) {
+            if (entity instanceof MiPa) {
+                if (residentMiPas.contains(entity)) {
+                    log.warn("Verwaltungsbereich " + entity + " does already exist in Flurstück "
+                                + this.currentFlurstueck);
+                } else {
+                    this.miPaModel.addMiPa((MiPa)entity);
+                     f = new StyledFeatureGroupWrapper((StyledFeature)entity, PROVIDER_NAME, PROVIDER_NAME);
+                    featCollection.addFeature(f);
+                }
+            }
+        }
+
+        if (rowCountBefore == this.miPaModel.getRowCount()) {
+            log.warn("No MiPa items were added from input list " + dataList);
+        } else {
+            this.miPaModel.fireTableDataChanged();
+             mc.setGroupLayerVisibility(PROVIDER_NAME, true);
+        }
+    }
+
+    @Override
+    public String getDisplayName(final BasicEntity entity) {
+        if(entity instanceof MiPa)
+        {
+            final MiPa mipa = (MiPa) entity;
+            
+            return this.getProviderName() + 
+                   GeometrySlotInformation.SLOT_IDENTIFIER_SEPARATOR +
+                   this.getIdentifierString(mipa);
+        }
+        
+        return Copyable.UNKNOWN_ENTITY;
+    }
+
+    @Override
+    public Icon getDisplayIcon() {
+        return this.copyDisplayIcon;
+    }
+
+    @Override
+    public boolean knowsDisplayName(BasicEntity entity) {
+        return entity instanceof MiPa;
+    }
 }
