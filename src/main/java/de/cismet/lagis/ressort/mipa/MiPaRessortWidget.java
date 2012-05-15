@@ -62,6 +62,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
+import de.cismet.cids.custom.beans.lagis.*;
+
 import de.cismet.cismap.commons.features.Feature;
 import de.cismet.cismap.commons.features.FeatureCollection;
 import de.cismet.cismap.commons.features.FeatureCollectionEvent;
@@ -70,7 +72,7 @@ import de.cismet.cismap.commons.features.StyledFeature;
 import de.cismet.cismap.commons.gui.MappingComponent;
 import de.cismet.cismap.commons.gui.StyledFeatureGroupWrapper;
 
-import de.cismet.lagis.broker.EJBroker;
+import de.cismet.lagis.broker.CidsBroker;
 import de.cismet.lagis.broker.LagisBroker;
 
 import de.cismet.lagis.editor.DateEditor;
@@ -326,7 +328,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         final JComboBox combo = new JComboBox();
         combo.setBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0));
         combo.setEditable(true);
-        final Set<MiPaKategorie> alleKategorien = EJBroker.getInstance().getAllMiPaKategorien();
+
+        final Collection<MipaKategorieCustomBean> alleKategorien = CidsBroker.getInstance().getAllMiPaKategorien();
         for (final MiPaKategorie currentKategorie : alleKategorien) {
             combo.addItem(currentKategorie);
         }
@@ -358,10 +361,10 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
 
         enableSlaveComponents(false);
         // lstMerkmale.setm
-        final Set<MiPaMerkmal> miPaMerkmale = EJBroker.getInstance().getAllMiPaMerkmale();
+        final Collection<MipaMerkmalCustomBean> miPaMerkmale = CidsBroker.getInstance().getAllMiPaMerkmale();
         final Vector<MerkmalCheckBox> merkmalCheckBoxes = new Vector<MerkmalCheckBox>();
         if ((miPaMerkmale != null) && (miPaMerkmale.size() > 0)) {
-            for (final MiPaMerkmal currentMerkmal : miPaMerkmale) {
+            for (final MipaMerkmalCustomBean currentMerkmal : miPaMerkmale) {
                 if ((currentMerkmal != null) && (currentMerkmal.getBezeichnung() != null)) {
                     final MerkmalCheckBox newMerkmalCheckBox = new MerkmalCheckBox(currentMerkmal);
                     setOpaqueRecursive(newMerkmalCheckBox.getComponents());
@@ -427,8 +430,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         cbxAuspraegung.removeActionListener(cboAuspraegungsActionListener);
         cbxAuspraegung.removeAllItems();
         final int maxNumericEntries = 100;
-        if ((mp != null) && (mp.getMiPaNutzung() != null) && (mp.getMiPaNutzung().getMiPaKategorie() != null)
-                    && (mp.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung() != null)
+        if ((mp != null) && (mp.getMiPaNutzung() != null)
+                    && (mp.getMiPaNutzung().getMiPaKategorie() != null)
                     && mp.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung()) {
             if (cbxAuspraegung.getItemCount() != maxNumericEntries) {
                 for (int i = 1; i <= maxNumericEntries; i++) {
@@ -444,7 +447,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             if (log.isDebugEnabled()) {
                 log.debug("Ausprägungen sind vorhanden");
             }
-            final Set<MiPaKategorieAuspraegung> auspraegungen = mp.getMiPaNutzung()
+            final Collection<MipaKategorieAuspraegungCustomBean> auspraegungen = mp.getMiPaNutzung()
                         .getMiPaKategorie()
                         .getKategorieAuspraegungen();
             for (final MiPaKategorieAuspraegung currentAuspraegung : auspraegungen) {
@@ -494,12 +497,14 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                             }
                             isFlurstueckEditable = false;
                         }
+
                         miPaModel.refreshTableModel(getCurrentObject().getMiPas());
                         if (isUpdateAvailable()) {
                             cleanup();
                             return;
                         }
-                        final Set<FlurstueckSchluessel> crossRefs = getCurrentObject().getMiPasQuerverweise();
+                        final Collection<FlurstueckSchluesselCustomBean> crossRefs = getCurrentObject()
+                                    .getMiPasQuerverweise();
                         if ((crossRefs != null) && (crossRefs.size() > 0)) {
                             lstCrossRefs.setModel(new DefaultUniqueListModel(crossRefs));
                         }
@@ -561,7 +566,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         }
         miPaModel.clearSlaveComponents();
         deselectAllListEntries();
-        miPaModel.refreshTableModel(new HashSet<MiPa>());
+        miPaModel.refreshTableModel(new HashSet<MipaCustomBean>());
         lstCrossRefs.setModel(new DefaultUniqueListModel());
         if (EventQueue.isDispatchThread()) {
             lstCrossRefs.updateUI();
@@ -636,7 +641,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     }
 
     @Override
-    public void flurstueckChanged(final Flurstueck newFlurstueck) {
+    public void flurstueckChanged(final FlurstueckCustomBean newFlurstueck) {
         try {
             log.info("FlurstueckChanged");
             currentFlurstueck = newFlurstueck;
@@ -648,8 +653,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     }
 
     @Override
-    public void updateFlurstueckForSaving(final Flurstueck flurstueck) {
-        final Set<MiPa> miPas = flurstueck.getMiPas();
+    public void updateFlurstueckForSaving(final FlurstueckCustomBean flurstueck) {
+        final Collection<MipaCustomBean> miPas = flurstueck.getMiPas();
         if (miPas != null) {
             miPas.clear();
             miPas.addAll(miPaModel.getAllMiPas());
@@ -687,7 +692,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             }
         } else if (source instanceof JList) {
             if (e.getClickCount() > 1) {
-                final FlurstueckSchluessel key = (FlurstueckSchluessel)lstCrossRefs.getSelectedValue();
+                final FlurstueckSchluesselCustomBean key = (FlurstueckSchluesselCustomBean)
+                    lstCrossRefs.getSelectedValue();
                 if (key != null) {
                     LagisBroker.getInstance().loadFlurstueck(key);
                 }
@@ -753,7 +759,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                         // }
                     }
                 }
-                final Set<MiPaMerkmal> merkmale = selectedMiPa.getMiPaMerkmal();
+                final Collection<MipaMerkmalCustomBean> merkmale = selectedMiPa.getMiPaMerkmal();
                 if (merkmale != null) {
                     for (int i = 0; i < lstMerkmale.getModel().getSize(); i++) {
                         final MerkmalCheckBox currentCheckBox = (MerkmalCheckBox)lstMerkmale.getModel().getElementAt(i);
@@ -839,7 +845,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             validationMessage = "Bitte vollenden Sie alle Änderungen bei den Vermietungen und Verpachtungen.";
             return Validatable.ERROR;
         }
-        final Vector<MiPa> miPas = miPaModel.getAllMiPas();
+        final Vector<MipaCustomBean> miPas = miPaModel.getAllMiPas();
         if ((miPas != null) || (miPas.size() > 0)) {
             for (final MiPa currentMiPa : miPas) {
                 if ((currentMiPa != null)
@@ -887,10 +893,10 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             final MiPa miPa = miPaModel.getMiPaAtRow(((JXTable)tblMipa).getFilters().convertRowIndexToModel(
                         tblMipa.getSelectedRow()));
             if (miPa != null) {
-                Set<MiPaMerkmal> merkmale = miPa.getMiPaMerkmal();
+                Collection<MipaMerkmalCustomBean> merkmale = miPa.getMiPaMerkmal();
                 if (merkmale == null) {
                     log.info("neues Hibernateset für Merkmale angelegt");
-                    merkmale = new HashSet<MiPaMerkmal>();
+                    merkmale = new HashSet<MipaMerkmalCustomBean>();
                 }
 
                 if (e.getStateChange() == 1) {
@@ -1454,7 +1460,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
      * @param  evt  DOCUMENT ME!
      */
     private void btnAddMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMiPaActionPerformed
-        final MiPa tmpMiPa = new MiPa();
+        final MipaCustomBean tmpMiPa = MipaCustomBean.createNew();
         miPaModel.addMiPa(tmpMiPa);
         miPaModel.fireTableDataChanged();
     }                                                                              //GEN-LAST:event_btnAddMiPaActionPerformed
@@ -1501,7 +1507,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         if (log.isDebugEnabled()) {
             log.debug("Update der Querverweise");
         }
-        final Set<FlurstueckSchluessel> crossRefs = EJBroker.getInstance()
+        final Collection<FlurstueckSchluesselCustomBean> crossRefs = CidsBroker.getInstance()
                     .getCrossreferencesForMiPas(new HashSet(miPaModel.getAllMiPas()));
         final DefaultUniqueListModel newModel = new DefaultUniqueListModel();
         if (crossRefs != null) {
@@ -1509,7 +1515,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 log.debug("Es sind Querverweise auf MiPas vorhanden");
             }
             currentFlurstueck.setVertraegeQuerverweise(crossRefs);
-            final Iterator<FlurstueckSchluessel> it = crossRefs.iterator();
+            final Iterator<FlurstueckSchluesselCustomBean> it = crossRefs.iterator();
             while (it.hasNext()) {
                 if (log.isDebugEnabled()) {
                     log.debug("Ein Querverweis hinzugefügt");
@@ -1572,12 +1578,12 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
 
     @Override
     public List<BasicEntity> getCopyData() {
-        final Vector<MiPa> allMiPas = this.miPaModel.getAllMiPas();
+        final Vector<MipaCustomBean> allMiPas = this.miPaModel.getAllMiPas();
         final ArrayList<BasicEntity> result = new ArrayList<BasicEntity>(allMiPas.size());
 
-        MiPa tmp;
-        for (final MiPa mipa : allMiPas) {
-            tmp = new MiPa();
+        MipaCustomBean tmp;
+        for (final MipaCustomBean mipa : allMiPas) {
+            tmp = MipaCustomBean.createNew();
 
             tmp.setAktenzeichen(mipa.getAktenzeichen());
             tmp.setBemerkung(mipa.getBemerkung());
@@ -1619,12 +1625,12 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         }
 
         if (item instanceof MiPa) {
-            final Vector<MiPa> residentMiPas = this.miPaModel.getAllMiPas();
+            final Collection<MipaCustomBean> residentMiPas = this.miPaModel.getAllMiPas();
 
             if (residentMiPas.contains(item)) {
                 log.warn("MiPa " + item + " does already exist in Flurstück " + this.currentFlurstueck);
             } else {
-                this.miPaModel.addMiPa((MiPa)item);
+                this.miPaModel.addMiPa((MipaCustomBean)item);
 
                 final MappingComponent mc = LagisBroker.getInstance().getMappingComponent();
                 final Feature f = new StyledFeatureGroupWrapper((StyledFeature)item, PROVIDER_NAME, PROVIDER_NAME);
@@ -1646,7 +1652,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             return;
         }
 
-        final Vector<MiPa> residentMiPas = this.miPaModel.getAllMiPas();
+        final Vector<MipaCustomBean> residentMiPas = this.miPaModel.getAllMiPas();
         final int rowCountBefore = this.miPaModel.getRowCount();
 
         Feature f;
@@ -1659,7 +1665,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                     log.warn("Verwaltungsbereich " + entity + " does already exist in Flurstück "
                                 + this.currentFlurstueck);
                 } else {
-                    this.miPaModel.addMiPa((MiPa)entity);
+                    this.miPaModel.addMiPa((MipaCustomBean)entity);
                     f = new StyledFeatureGroupWrapper((StyledFeature)entity, PROVIDER_NAME, PROVIDER_NAME);
                     featCollection.addFeature(f);
                 }

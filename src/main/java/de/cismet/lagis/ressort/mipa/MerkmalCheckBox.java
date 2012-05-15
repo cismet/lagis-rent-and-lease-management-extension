@@ -13,6 +13,8 @@ package de.cismet.lagis.ressort.mipa;
 
 import javax.swing.JCheckBox;
 
+import de.cismet.cids.custom.beans.lagis.MipaMerkmalCustomBean;
+
 import de.cismet.lagisEE.entity.extension.vermietung.MiPaMerkmal;
 
 /**
@@ -25,7 +27,7 @@ public class MerkmalCheckBox extends JCheckBox {
 
     //~ Instance fields --------------------------------------------------------
 
-    private MiPaMerkmal miPaMerkmal;
+    private MipaMerkmalCustomBean miPaMerkmal;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -34,7 +36,7 @@ public class MerkmalCheckBox extends JCheckBox {
      *
      * @param  miPa  DOCUMENT ME!
      */
-    public MerkmalCheckBox(final MiPaMerkmal miPa) {
+    public MerkmalCheckBox(final MipaMerkmalCustomBean miPa) {
         super(miPa.getBezeichnung());
         this.miPaMerkmal = miPa;
     }
@@ -46,7 +48,7 @@ public class MerkmalCheckBox extends JCheckBox {
      *
      * @return  DOCUMENT ME!
      */
-    public MiPaMerkmal getMiPaMerkmal() {
+    public MipaMerkmalCustomBean getMiPaMerkmal() {
         return miPaMerkmal;
     }
 }

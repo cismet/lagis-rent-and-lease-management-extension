@@ -18,6 +18,7 @@ import org.jdesktop.swingx.JXTable;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import java.util.*;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -26,6 +27,11 @@ import java.util.Vector;
 import javax.swing.DefaultListModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.text.BadLocationException;
+
+import de.cismet.cids.custom.beans.lagis.MipaCustomBean;
+import de.cismet.cids.custom.beans.lagis.MipaKategorieAuspraegungCustomBean;
+import de.cismet.cids.custom.beans.lagis.MipaKategorieCustomBean;
+import de.cismet.cids.custom.beans.lagis.MipaNutzungCustomBean;
 
 import de.cismet.cismap.commons.features.Feature;
 
@@ -71,7 +77,7 @@ public class MiPaModel extends AbstractTableModel {
 
     //~ Instance fields --------------------------------------------------------
 
-    Vector<MiPa> miPas;
+    Vector<MipaCustomBean> miPas;
 
     private final Logger log = org.apache.log4j.Logger.getLogger(this.getClass());
     private boolean isInEditMode = false;
@@ -85,7 +91,7 @@ public class MiPaModel extends AbstractTableModel {
      * Creates a new MiPaModel object.
      */
     public MiPaModel() {
-        miPas = new Vector<MiPa>();
+        miPas = new Vector<MipaCustomBean>();
         initDocumentModels();
         miPaMerkmalsModel = new DefaultListModel();
     }
@@ -95,12 +101,12 @@ public class MiPaModel extends AbstractTableModel {
      *
      * @param  miPas  DOCUMENT ME!
      */
-    public MiPaModel(final Set<MiPa> miPas) {
+    public MiPaModel(final Collection<MipaCustomBean> miPas) {
         try {
-            this.miPas = new Vector<MiPa>(miPas);
+            this.miPas = new Vector<MipaCustomBean>(miPas);
         } catch (Exception ex) {
             log.error("Fehler beim anlegen des Models", ex);
-            this.miPas = new Vector<MiPa>();
+            this.miPas = new Vector<MipaCustomBean>();
         }
         initDocumentModels();
         miPaMerkmalsModel = new DefaultListModel();
@@ -126,7 +132,13 @@ public class MiPaModel extends AbstractTableModel {
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         try {
+            if (rowIndex >= miPas.size()) {
+                log.warn("Cannot access row " + rowIndex + ". There are just " + miPas.size() + " rows");
+                return null;
+            }
+
             final MiPa value = miPas.get(rowIndex);
+
             switch (columnIndex) {
                 case LAGE_COLUMN: {
                     return value.getLage();
@@ -153,7 +165,6 @@ public class MiPaModel extends AbstractTableModel {
                 }
                 case AUSPRAEGUNG_COLUMN: {
                     if ((value.getMiPaNutzung() != null) && (value.getMiPaNutzung().getMiPaKategorie() != null)
-                                && (value.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung() != null)
                                 && value.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung()) {
                         if (value.getMiPaNutzung().getAusgewaehlteNummer() != null) {
                             return "Nr. " + value.getMiPaNutzung().getAusgewaehlteNummer();
@@ -191,7 +202,7 @@ public class MiPaModel extends AbstractTableModel {
      *
      * @param  miPa  DOCUMENT ME!
      */
-    public void addMiPa(final MiPa miPa) {
+    public void addMiPa(final MipaCustomBean miPa) {
         miPas.add(miPa);
     }
 
@@ -202,7 +213,7 @@ public class MiPaModel extends AbstractTableModel {
      *
      * @return  DOCUMENT ME!
      */
-    public MiPa getMiPaAtRow(final int rowIndex) {
+    public MipaCustomBean getMiPaAtRow(final int rowIndex) {
         return miPas.get(rowIndex);
     }
 
@@ -227,9 +238,7 @@ public class MiPaModel extends AbstractTableModel {
                 final MiPa currentMiPa = getMiPaAtRow(rowIndex);
                 if ((currentMiPa != null) && (currentMiPa.getMiPaNutzung() != null)
                             && (currentMiPa.getMiPaNutzung().getMiPaKategorie() != null)
-                            && (((currentMiPa.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung()
-                                        != null)
-                                    && currentMiPa.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung())
+                            && ((currentMiPa.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung())
                                 || ((currentMiPa.getMiPaNutzung().getMiPaKategorie().getKategorieAuspraegungen()
                                         != null)
                                     && (currentMiPa.getMiPaNutzung().getMiPaKategorie().getKategorieAuspraegungen()
@@ -263,7 +272,7 @@ public class MiPaModel extends AbstractTableModel {
     public Vector<Feature> getAllMiPaFeatures() {
         final Vector<Feature> tmp = new Vector<Feature>();
         if (miPas != null) {
-            final Iterator<MiPa> it = miPas.iterator();
+            final Iterator<MipaCustomBean> it = miPas.iterator();
             while (it.hasNext()) {
                 final MiPa curMiPa = it.next();
                 if (curMiPa.getGeometry() != null) {
@@ -281,15 +290,15 @@ public class MiPaModel extends AbstractTableModel {
      *
      * @param  miPas  DOCUMENT ME!
      */
-    public void refreshTableModel(final Set<MiPa> miPas) {
+    public void refreshTableModel(final Collection<MipaCustomBean> miPas) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Refresh des MiPaTableModell");
             }
-            this.miPas = new Vector<MiPa>(miPas);
+            this.miPas = new Vector<MipaCustomBean>(miPas);
         } catch (Exception ex) {
             log.error("Fehler beim refreshen des Models", ex);
-            this.miPas = new Vector<MiPa>();
+            this.miPas = new Vector<MipaCustomBean>();
         }
         fireTableDataChanged();
     }
@@ -299,7 +308,7 @@ public class MiPaModel extends AbstractTableModel {
      *
      * @return  DOCUMENT ME!
      */
-    public Vector<MiPa> getAllMiPas() {
+    public Vector<MipaCustomBean> getAllMiPas() {
         return miPas;
     }
 
@@ -330,12 +339,12 @@ public class MiPaModel extends AbstractTableModel {
                 }
                 case NUTZUNG_COLUMN: {
                     if (value.getMiPaNutzung() == null) {
-                        value.setMiPaNutzung(new MiPaNutzung());
-                        value.getMiPaNutzung().setMiPaKategorie((MiPaKategorie)aValue);
+                        value.setMiPaNutzung(MipaNutzungCustomBean.createNew());
+                        value.getMiPaNutzung().setMiPaKategorie((MipaKategorieCustomBean)aValue);
                         if ((aValue != null) && (((MiPaKategorie)aValue).getKategorieAuspraegungen() != null)
                                     && (((MiPaKategorie)aValue).getKategorieAuspraegungen().size() == 1)) {
-                            for (final MiPaKategorieAuspraegung currentAuspraegung
-                                        : ((MiPaKategorie)aValue).getKategorieAuspraegungen()) {
+                            for (final MipaKategorieAuspraegungCustomBean currentAuspraegung
+                                        : ((MipaKategorieCustomBean)aValue).getKategorieAuspraegungen()) {
                                 value.getMiPaNutzung().setAusgewaehlteAuspraegung(currentAuspraegung);
                             }
                         }
@@ -350,10 +359,10 @@ public class MiPaModel extends AbstractTableModel {
                                 value.getMiPaNutzung().setAusgewaehlteNummer(null);
                             }
                         }
-                        value.getMiPaNutzung().setMiPaKategorie((MiPaKategorie)aValue);
+                        value.getMiPaNutzung().setMiPaKategorie((MipaKategorieCustomBean)aValue);
                         if ((aValue != null) && (((MiPaKategorie)aValue).getKategorieAuspraegungen() != null)
                                     && (((MiPaKategorie)aValue).getKategorieAuspraegungen().size() == 1)) {
-                            for (final MiPaKategorieAuspraegung currentAuspraegung
+                            for (final MipaKategorieAuspraegungCustomBean currentAuspraegung
                                         : ((MiPaKategorie)aValue).getKategorieAuspraegungen()) {
                                 value.getMiPaNutzung().setAusgewaehlteAuspraegung(currentAuspraegung);
                             }
@@ -363,9 +372,9 @@ public class MiPaModel extends AbstractTableModel {
                 }
                 case AUSPRAEGUNG_COLUMN: {
                     if (value.getMiPaNutzung() == null) {
-                        value.setMiPaNutzung(new MiPaNutzung());
+                        value.setMiPaNutzung(MipaNutzungCustomBean.createNew());
                     } else if ((aValue != null) && (aValue instanceof MiPaKategorieAuspraegung)) {
-                        value.getMiPaNutzung().setAusgewaehlteAuspraegung((MiPaKategorieAuspraegung)aValue);
+                        value.getMiPaNutzung().setAusgewaehlteAuspraegung((MipaKategorieAuspraegungCustomBean)aValue);
                         value.getMiPaNutzung().setAusgewaehlteNummer(null);
                     } else if ((aValue != null) && (aValue instanceof Integer)) {
                         value.getMiPaNutzung().setAusgewaehlteAuspraegung(null);

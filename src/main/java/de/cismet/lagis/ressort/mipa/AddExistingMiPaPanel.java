@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import org.jdesktop.swingx.JXTable;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -24,7 +25,10 @@ import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import de.cismet.lagis.broker.EJBroker;
+import de.cismet.cids.custom.beans.lagis.FlurstueckSchluesselCustomBean;
+import de.cismet.cids.custom.beans.lagis.MipaCustomBean;
+
+import de.cismet.lagis.broker.CidsBroker;
 import de.cismet.lagis.broker.LagisBroker;
 
 import de.cismet.lagis.gui.panels.*;
@@ -115,12 +119,12 @@ public class AddExistingMiPaPanel extends javax.swing.JPanel implements Validati
             log.debug("Validation Status: " + flurstueckChooser1.getStatus());
         }
         if (flurstueckChooser1.getStatus() == flurstueckChooser1.VALID) {
-            final FlurstueckSchluessel currentKey = flurstueckChooser1.getCurrentFlurstueckSchluessel();
-            final Set<MiPa> miPas = EJBroker.getInstance().getMiPaForKey(currentKey);
+            final FlurstueckSchluesselCustomBean currentKey = flurstueckChooser1.getCurrentFlurstueckSchluessel();
+            final Collection<MipaCustomBean> miPas = CidsBroker.getInstance().getMiPaForKey(currentKey);
             if (miPas != null) {
                 // Check if the Contract ist already  added
                 // if(currentFlurstueck != null && currentFlurstueck.getVertraege() != null){
-                final Iterator<MiPa> it = currentMiPaTabelModel.getAllMiPas().iterator();
+                final Iterator<MipaCustomBean> it = currentMiPaTabelModel.getAllMiPas().iterator();
                 while (it.hasNext()) {
                     final MiPa curMiPa = it.next();
                     if (miPas.contains(curMiPa)) {
@@ -268,15 +272,17 @@ public class AddExistingMiPaPanel extends javax.swing.JPanel implements Validati
     private void btnOKActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnOKActionPerformed
         final int[] selectedRows = tblMiPa.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
-            final MiPa curMiPa = miPaModel.getMiPaAtRow(((JXTable)tblMiPa).convertRowIndexToModel(selectedRows[i]));
+            final MipaCustomBean curMiPa = miPaModel.getMiPaAtRow(((JXTable)tblMiPa).convertRowIndexToModel(
+                        selectedRows[i]));
             currentMiPaTabelModel.addMiPa(curMiPa);
             currentMiPaTabelModel.fireTableDataChanged();
-            final Set<FlurstueckSchluessel> crossRefs = EJBroker.getInstance().getCrossReferencesForMiPa(curMiPa);
+            final Collection<FlurstueckSchluesselCustomBean> crossRefs = CidsBroker.getInstance()
+                        .getCrossReferencesForMiPa(curMiPa);
             if (crossRefs != null) {
                 if (log.isDebugEnabled()) {
                     log.debug("Es sind Querverweise auf die MiPa vorhanden");
                 }
-                final Iterator<FlurstueckSchluessel> it = crossRefs.iterator();
+                final Iterator<FlurstueckSchluesselCustomBean> it = crossRefs.iterator();
                 while (it.hasNext()) {
                     if (log.isDebugEnabled()) {
                         log.debug("Ein Querverweis hinzugefügt");
