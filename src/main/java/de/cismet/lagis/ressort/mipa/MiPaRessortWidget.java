@@ -112,6 +112,8 @@ import de.cismet.lagisEE.entity.extension.vermietung.MiPaNutzung;
 
 import de.cismet.tools.CurrentStackTrace;
 
+import de.cismet.tools.gui.StaticSwingTools;
+
 /**
  * DOCUMENT ME!
  *
@@ -1496,8 +1498,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         dialog.pack();
         dialog.setIconImage(icoExistingContract.getImage());
         dialog.setTitle("Vorhandener Vertrag hinzufügen...");
-        dialog.setLocationRelativeTo(LagisBroker.getInstance().getParentComponent());
-        dialog.setVisible(true);
+        StaticSwingTools.showDialog(dialog);
     }                                                                                     //GEN-LAST:event_btnAddExitingMiPaActionPerformed
 
     /**
