@@ -19,3 +19,8 @@ The city of Wuppertal. Ressort 102 - Geodesy, Cadastres and Geodata. (Contact: M
 
 
 Don't hesitate to contact us if you have any questions.
+
+License
+=======
+
+lagis-rent-and-lease-management-extension is distributed under [LGPLv3](https://github.com/cismet/lagis-rent-and-lease-management-extension/blob/dev/LICENSE)
