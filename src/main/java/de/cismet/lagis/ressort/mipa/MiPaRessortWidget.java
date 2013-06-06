@@ -196,6 +196,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JList lstCrossRefs;
@@ -1072,15 +1074,18 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         panMiPaBordered = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         cpMiPa = new javax.swing.JScrollPane();
         tblMipa = new MipaTable();
+        jPanel3 = new javax.swing.JPanel();
+        btnAddExitingMiPa = new javax.swing.JButton();
         btnAddMiPa = new javax.swing.JButton();
         btnRemoveMiPa = new javax.swing.JButton();
-        btnAddExitingMiPa = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         panBackground = new javax.swing.JPanel();
         panQuerverweise = new javax.swing.JPanel();
@@ -1099,100 +1104,130 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         taBemerkung = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        final javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel2Layout.createSequentialGroup().addContainerGap().addComponent(
+                    jTabbedPane2,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    148,
+                    Short.MAX_VALUE).addContainerGap()));
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel2Layout.createSequentialGroup().addContainerGap().addComponent(
+                    jTabbedPane2,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    126,
+                    Short.MAX_VALUE).addContainerGap()));
 
         panMiPaBordered.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jPanel4.setLayout(new java.awt.GridBagLayout());
 
         cpMiPa.setBorder(null);
 
         tblMipa.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Nummer", "Lage", "Fläche m²", "Nutzung", "Nutzer", "Vertragsbeginn", "Vertragsende"
-            }
-        ));
+                new Object[][] {
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null },
+                    { null, null, null, null, null, null, null }
+                },
+                new String[] { "Nummer", "Lage", "Fläche m²", "Nutzung", "Nutzer", "Vertragsbeginn", "Vertragsende" }));
         cpMiPa.setViewportView(tblMipa);
 
-        btnAddMiPa.setAction(((MipaTable)tblMipa).getAddAction());
-        btnAddMiPa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/cismet/lagis/ressource/icons/buttons/add.png"))); // NOI18N
-        btnAddMiPa.setBorder(null);
-        btnAddMiPa.setBorderPainted(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        jPanel4.add(cpMiPa, gridBagConstraints);
 
-        btnRemoveMiPa.setAction(((MipaTable)tblMipa).getRemoveAction());
-        btnRemoveMiPa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/cismet/lagis/ressource/icons/buttons/remove.png"))); // NOI18N
-        btnRemoveMiPa.setBorder(null);
-        btnRemoveMiPa.setBorderPainted(false);
+        jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        btnAddExitingMiPa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/cismet/lagis/ressource/icons/toolbar/contract.png"))); // NOI18N
+        btnAddExitingMiPa.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/de/cismet/lagis/ressource/icons/toolbar/contract.png"))); // NOI18N
         btnAddExitingMiPa.setBorder(null);
         btnAddExitingMiPa.setBorderPainted(false);
+        btnAddExitingMiPa.setMaximumSize(new java.awt.Dimension(25, 25));
+        btnAddExitingMiPa.setMinimumSize(new java.awt.Dimension(25, 25));
+        btnAddExitingMiPa.setPreferredSize(new java.awt.Dimension(25, 25));
         btnAddExitingMiPa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddExitingMiPaActionPerformed(evt);
-            }
-        });
 
-        javax.swing.GroupLayout panMiPaBorderedLayout = new javax.swing.GroupLayout(panMiPaBordered);
+                @Override
+                public void actionPerformed(final java.awt.event.ActionEvent evt) {
+                    btnAddExitingMiPaActionPerformed(evt);
+                }
+            });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 3);
+        jPanel3.add(btnAddExitingMiPa, gridBagConstraints);
+
+        btnAddMiPa.setAction(((MipaTable)tblMipa).getAddAction());
+        btnAddMiPa.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/de/cismet/lagis/ressource/icons/buttons/add.png"))); // NOI18N
+        btnAddMiPa.setBorder(null);
+        btnAddMiPa.setBorderPainted(false);
+        btnAddMiPa.setMaximumSize(new java.awt.Dimension(25, 25));
+        btnAddMiPa.setMinimumSize(new java.awt.Dimension(25, 25));
+        btnAddMiPa.setPreferredSize(new java.awt.Dimension(25, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 3);
+        jPanel3.add(btnAddMiPa, gridBagConstraints);
+
+        btnRemoveMiPa.setAction(((MipaTable)tblMipa).getRemoveAction());
+        btnRemoveMiPa.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/de/cismet/lagis/ressource/icons/buttons/remove.png"))); // NOI18N
+        btnRemoveMiPa.setBorder(null);
+        btnRemoveMiPa.setBorderPainted(false);
+        btnRemoveMiPa.setMaximumSize(new java.awt.Dimension(25, 25));
+        btnRemoveMiPa.setMinimumSize(new java.awt.Dimension(25, 25));
+        btnRemoveMiPa.setPreferredSize(new java.awt.Dimension(25, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
+        jPanel3.add(btnRemoveMiPa, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 3, 2);
+        jPanel4.add(jPanel3, gridBagConstraints);
+
+        final javax.swing.GroupLayout panMiPaBorderedLayout = new javax.swing.GroupLayout(panMiPaBordered);
         panMiPaBordered.setLayout(panMiPaBorderedLayout);
         panMiPaBorderedLayout.setHorizontalGroup(
-            panMiPaBorderedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panMiPaBorderedLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panMiPaBorderedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panMiPaBorderedLayout.createSequentialGroup()
-                        .addComponent(btnAddExitingMiPa, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAddMiPa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRemoveMiPa, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cpMiPa, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        panMiPaBorderedLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddExitingMiPa, btnAddMiPa, btnRemoveMiPa});
-
+            panMiPaBorderedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panMiPaBorderedLayout.createSequentialGroup().addContainerGap().addComponent(
+                    jPanel4,
+                    javax.swing.GroupLayout.PREFERRED_SIZE,
+                    0,
+                    Short.MAX_VALUE).addContainerGap()));
         panMiPaBorderedLayout.setVerticalGroup(
-            panMiPaBorderedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panMiPaBorderedLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panMiPaBorderedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnRemoveMiPa, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddMiPa, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddExitingMiPa, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cpMiPa, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        panMiPaBorderedLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddExitingMiPa, btnAddMiPa, btnRemoveMiPa});
+            panMiPaBorderedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panMiPaBorderedLayout.createSequentialGroup().addGap(0, 0, 0).addComponent(
+                    jPanel4,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    478,
+                    Short.MAX_VALUE).addContainerGap()));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -1208,39 +1243,42 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         lstCrossRefs.setOpaque(false);
         jScrollPane1.setViewportView(lstCrossRefs);
 
-        javax.swing.GroupLayout panQuerverweiseTitledLayout = new javax.swing.GroupLayout(panQuerverweiseTitled);
+        final javax.swing.GroupLayout panQuerverweiseTitledLayout = new javax.swing.GroupLayout(panQuerverweiseTitled);
         panQuerverweiseTitled.setLayout(panQuerverweiseTitledLayout);
         panQuerverweiseTitledLayout.setHorizontalGroup(
-            panQuerverweiseTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-        );
+            panQuerverweiseTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                jScrollPane1,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                187,
+                Short.MAX_VALUE));
         panQuerverweiseTitledLayout.setVerticalGroup(
-            panQuerverweiseTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-        );
+            panQuerverweiseTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                jScrollPane1,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                31,
+                Short.MAX_VALUE));
 
         jLabel2.setText("Querverweise:");
 
-        javax.swing.GroupLayout panQuerverweiseLayout = new javax.swing.GroupLayout(panQuerverweise);
+        final javax.swing.GroupLayout panQuerverweiseLayout = new javax.swing.GroupLayout(panQuerverweise);
         panQuerverweise.setLayout(panQuerverweiseLayout);
         panQuerverweiseLayout.setHorizontalGroup(
-            panQuerverweiseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panQuerverweiseLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panQuerverweiseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(panQuerverweiseTitled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+            panQuerverweiseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panQuerverweiseLayout.createSequentialGroup().addContainerGap().addGroup(
+                    panQuerverweiseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                        jLabel2).addComponent(
+                        panQuerverweiseTitled,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE)).addContainerGap()));
         panQuerverweiseLayout.setVerticalGroup(
-            panQuerverweiseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panQuerverweiseLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panQuerverweiseTitled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+            panQuerverweiseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panQuerverweiseLayout.createSequentialGroup().addContainerGap().addComponent(jLabel2).addPreferredGap(
+                    javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
+                    panQuerverweiseTitled,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE).addContainerGap()));
 
         panMerkmale.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         panMerkmale.setOpaque(false);
@@ -1254,39 +1292,41 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         lstMerkmale.setOpaque(false);
         spMerkmale.setViewportView(lstMerkmale);
 
-        javax.swing.GroupLayout panMerkmaleTitledLayout = new javax.swing.GroupLayout(panMerkmaleTitled);
+        final javax.swing.GroupLayout panMerkmaleTitledLayout = new javax.swing.GroupLayout(panMerkmaleTitled);
         panMerkmaleTitled.setLayout(panMerkmaleTitledLayout);
         panMerkmaleTitledLayout.setHorizontalGroup(
-            panMerkmaleTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spMerkmale, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-        );
+            panMerkmaleTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                spMerkmale,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                171,
+                Short.MAX_VALUE));
         panMerkmaleTitledLayout.setVerticalGroup(
-            panMerkmaleTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spMerkmale, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-        );
+            panMerkmaleTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                spMerkmale,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                31,
+                Short.MAX_VALUE));
 
         jLabel1.setText("Merkmale:");
 
-        javax.swing.GroupLayout panMerkmaleLayout = new javax.swing.GroupLayout(panMerkmale);
+        final javax.swing.GroupLayout panMerkmaleLayout = new javax.swing.GroupLayout(panMerkmale);
         panMerkmale.setLayout(panMerkmaleLayout);
         panMerkmaleLayout.setHorizontalGroup(
-            panMerkmaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panMerkmaleLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panMerkmaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panMerkmaleTitled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1))
-                .addContainerGap())
-        );
+            panMerkmaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panMerkmaleLayout.createSequentialGroup().addContainerGap().addGroup(
+                    panMerkmaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                        panMerkmaleTitled,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE).addComponent(jLabel1)).addContainerGap()));
         panMerkmaleLayout.setVerticalGroup(
-            panMerkmaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panMerkmaleLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panMerkmaleTitled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+            panMerkmaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panMerkmaleLayout.createSequentialGroup().addContainerGap().addComponent(jLabel1).addPreferredGap(
+                    javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
+                    panMerkmaleTitled,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE).addContainerGap()));
 
         panBemerkung.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         panBemerkung.setOpaque(false);
@@ -1303,110 +1343,137 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         taBemerkung.setOpaque(false);
         spBemerkung.setViewportView(taBemerkung);
 
-        javax.swing.GroupLayout panBemerkungTitledLayout = new javax.swing.GroupLayout(panBemerkungTitled);
+        final javax.swing.GroupLayout panBemerkungTitledLayout = new javax.swing.GroupLayout(panBemerkungTitled);
         panBemerkungTitled.setLayout(panBemerkungTitledLayout);
         panBemerkungTitledLayout.setHorizontalGroup(
-            panBemerkungTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spBemerkung, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
-        );
+            panBemerkungTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                spBemerkung,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                254,
+                Short.MAX_VALUE));
         panBemerkungTitledLayout.setVerticalGroup(
-            panBemerkungTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spBemerkung, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-        );
+            panBemerkungTitledLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                spBemerkung,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                31,
+                Short.MAX_VALUE));
 
         jLabel3.setText("Bemerkung");
 
-        javax.swing.GroupLayout panBemerkungLayout = new javax.swing.GroupLayout(panBemerkung);
+        final javax.swing.GroupLayout panBemerkungLayout = new javax.swing.GroupLayout(panBemerkung);
         panBemerkung.setLayout(panBemerkungLayout);
         panBemerkungLayout.setHorizontalGroup(
-            panBemerkungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panBemerkungLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panBemerkungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panBemerkungTitled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3))
-                .addContainerGap())
-        );
+            panBemerkungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panBemerkungLayout.createSequentialGroup().addContainerGap().addGroup(
+                    panBemerkungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                        panBemerkungTitled,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE).addComponent(jLabel3)).addContainerGap()));
         panBemerkungLayout.setVerticalGroup(
-            panBemerkungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panBemerkungLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panBemerkungTitled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+            panBemerkungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panBemerkungLayout.createSequentialGroup().addContainerGap().addComponent(jLabel3).addPreferredGap(
+                    javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
+                    panBemerkungTitled,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE).addContainerGap()));
 
-        javax.swing.GroupLayout panBackgroundLayout = new javax.swing.GroupLayout(panBackground);
+        final javax.swing.GroupLayout panBackgroundLayout = new javax.swing.GroupLayout(panBackground);
         panBackground.setLayout(panBackgroundLayout);
         panBackgroundLayout.setHorizontalGroup(
-            panBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panBackgroundLayout.createSequentialGroup()
-                .addComponent(panMerkmale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panQuerverweise, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panBemerkung, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+            panBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                panBackgroundLayout.createSequentialGroup().addComponent(
+                    panMerkmale,
+                    javax.swing.GroupLayout.PREFERRED_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
+                    javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
+                    panQuerverweise,
+                    javax.swing.GroupLayout.PREFERRED_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(
+                    javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
+                    panBemerkung,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE)));
         panBackgroundLayout.setVerticalGroup(
-            panBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panBemerkung, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panMerkmale, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panQuerverweise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+            panBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(
+                panBemerkung,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                Short.MAX_VALUE).addComponent(
+                panMerkmale,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                Short.MAX_VALUE).addComponent(
+                panQuerverweise,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                Short.MAX_VALUE));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        final javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panBackground, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel1Layout.createSequentialGroup().addContainerGap().addComponent(
+                    panBackground,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE).addContainerGap()));
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panBackground, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                jPanel1Layout.createSequentialGroup().addContainerGap().addComponent(
+                    panBackground,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE).addContainerGap()));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(panMiPaBordered, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                layout.createSequentialGroup().addContainerGap().addGroup(
+                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(
+                        panMiPaBordered,
+                        javax.swing.GroupLayout.Alignment.LEADING,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE).addComponent(
+                        jPanel1,
+                        javax.swing.GroupLayout.Alignment.LEADING,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        Short.MAX_VALUE)).addContainerGap()));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panMiPaBordered, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-    }// </editor-fold>//GEN-END:initComponents
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+                javax.swing.GroupLayout.Alignment.TRAILING,
+                layout.createSequentialGroup().addContainerGap().addComponent(
+                    panMiPaBordered,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
+                    jPanel1,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    Short.MAX_VALUE).addContainerGap()));
+    } // </editor-fold>//GEN-END:initComponents
 
     /**
      * DOCUMENT ME!
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddExitingMiPaActionPerformed
+    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddExitingMiPaActionPerformed
         final JDialog dialog = new JDialog(LagisBroker.getInstance().getParentComponent(), "", true);
         dialog.add(new AddExistingMiPaPanel(currentFlurstueck, miPaModel, lstCrossRefs.getModel()));
         dialog.pack();
         dialog.setIconImage(icoExistingContract.getImage());
         dialog.setTitle("Vorhandener Vertrag hinzufügen...");
         StaticSwingTools.showDialog(dialog);
-    }//GEN-LAST:event_btnAddExitingMiPaActionPerformed
+    }                                                                                     //GEN-LAST:event_btnAddExitingMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
