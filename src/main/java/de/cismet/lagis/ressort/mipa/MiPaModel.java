@@ -36,8 +36,8 @@ import de.cismet.cids.custom.beans.lagis.MipaNutzungCustomBean;
 import de.cismet.cismap.commons.features.Feature;
 
 import de.cismet.lagis.broker.LagisBroker;
-import de.cismet.lagis.models.CidsBeanTableModel_Lagis;
 
+import de.cismet.lagis.models.CidsBeanTableModel_Lagis;
 import de.cismet.lagis.models.documents.SimpleDocumentModel;
 
 import de.cismet.lagisEE.entity.extension.vermietung.MiPa;
@@ -66,7 +66,7 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
             "Vertragsbeginn",
             "Vertragsende",
         };
-    
+
     private static final Class[] COLUMN_CLASSES = {
             String.class,
             String.class,
@@ -90,8 +90,6 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
     public static final int VERTRAGS_ENDE_COLUMN = 8;
 
     //~ Instance fields --------------------------------------------------------
-
-    //Vector<MipaCustomBean> miPas;
 
     private final Logger log = org.apache.log4j.Logger.getLogger(this.getClass());
     private SimpleDocumentModel bemerkungDocumentModel;
@@ -118,7 +116,6 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
     }
 
     //~ Methods ----------------------------------------------------------------
-
 
     @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
@@ -235,7 +232,7 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
     public Vector<Feature> getAllMiPaFeatures() {
         final Vector<Feature> tmp = new Vector<Feature>();
         if (getCidsBeans() != null) {
-            final Iterator<MipaCustomBean> it = (Iterator<MipaCustomBean>) getCidsBeans().iterator();
+            final Iterator<MipaCustomBean> it = (Iterator<MipaCustomBean>)getCidsBeans().iterator();
             while (it.hasNext()) {
                 final MiPa curMiPa = it.next();
                 if (curMiPa.getGeometry() != null) {
@@ -349,7 +346,6 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
             log.error("Fehler beim setzen von Daten in dem Modell: Zeile: " + rowIndex + " Spalte" + columnIndex, ex);
         }
     }
-
 
     /**
      * DOCUMENT ME!
