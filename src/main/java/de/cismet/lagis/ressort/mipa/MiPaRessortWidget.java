@@ -94,6 +94,8 @@ import de.cismet.lagis.renderer.FlurstueckSchluesselRenderer;
 
 import de.cismet.lagis.thread.BackgroundUpdateThread;
 
+import de.cismet.lagis.util.TableSelectionUtils;
+
 import de.cismet.lagis.utillity.GeometrySlotInformation;
 
 import de.cismet.lagis.validation.Validatable;
@@ -190,6 +192,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private javax.swing.JButton btnAddExitingMiPa;
     private javax.swing.JButton btnAddMiPa;
     private javax.swing.JButton btnRemoveMiPa;
+    private javax.swing.JButton btnUndo;
     private javax.swing.JScrollPane cpMiPa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -214,6 +217,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private javax.swing.JScrollPane spMerkmale;
     private javax.swing.JTextArea taBemerkung;
     private javax.swing.JTable tblMipa;
+    private javax.swing.JToggleButton tbtnSort;
     // End of variables declaration//GEN-END:variables
 
     //~ Constructors -----------------------------------------------------------
@@ -266,7 +270,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
      * DOCUMENT ME!
      */
     private void configureComponents() {
-        tblMipa.setModel(miPaModel);
+        TableSelectionUtils.crossReferenceModelAndTable(miPaModel, (MipaTable)tblMipa);
         tblMipa.setDefaultEditor(Date.class, new DateEditor());
         tblMipa.setDefaultRenderer(Date.class, new DateRenderer());
         tblMipa.addMouseListener(this);
@@ -636,6 +640,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             btnAddExitingMiPa.setEnabled(isEditable);
             btnAddMiPa.setEnabled(isEditable);
             miPaModel.setInEditMode(isEditable);
+            btnUndo.setEnabled(false);
             if (log.isDebugEnabled()) {
                 log.debug("MiPARessortWidget --> setComponentEditable finished");
             }
@@ -1086,6 +1091,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         btnAddExitingMiPa = new javax.swing.JButton();
         btnAddMiPa = new javax.swing.JButton();
         btnRemoveMiPa = new javax.swing.JButton();
+        tbtnSort = new javax.swing.JToggleButton();
+        btnUndo = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         panBackground = new javax.swing.JPanel();
         panQuerverweise = new javax.swing.JPanel();
@@ -1144,6 +1151,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 },
                 new String[] { "Nummer", "Lage", "Fläche m²", "Nutzung", "Nutzer", "Vertragsbeginn", "Vertragsende" }));
         cpMiPa.setViewportView(tblMipa);
+        ((MipaTable)tblMipa).setSortButton(tbtnSort);
+        ((MipaTable)tblMipa).setUndoButton(btnUndo);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1171,7 +1180,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 }
             });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 3);
         jPanel3.add(btnAddExitingMiPa, gridBagConstraints);
@@ -1185,7 +1194,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         btnAddMiPa.setMinimumSize(new java.awt.Dimension(25, 25));
         btnAddMiPa.setPreferredSize(new java.awt.Dimension(25, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 3);
         jPanel3.add(btnAddMiPa, gridBagConstraints);
@@ -1199,10 +1208,42 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         btnRemoveMiPa.setMinimumSize(new java.awt.Dimension(25, 25));
         btnRemoveMiPa.setPreferredSize(new java.awt.Dimension(25, 25));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
         jPanel3.add(btnRemoveMiPa, gridBagConstraints);
+
+        tbtnSort.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/de/cismet/lagis/ressource/icons/buttons/sort.png")));          // NOI18N
+        tbtnSort.setToolTipText("Sortierung An / Aus");
+        tbtnSort.setBorderPainted(false);
+        tbtnSort.setContentAreaFilled(false);
+        tbtnSort.setMaximumSize(new java.awt.Dimension(25, 25));
+        tbtnSort.setMinimumSize(new java.awt.Dimension(25, 25));
+        tbtnSort.setPreferredSize(new java.awt.Dimension(25, 25));
+        tbtnSort.setSelectedIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/de/cismet/lagis/ressource/icons/buttons/sort_selected.png"))); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
+        jPanel3.add(tbtnSort, gridBagConstraints);
+        tbtnSort.addItemListener(((MipaTable)tblMipa).getSortItemListener());
+
+        btnUndo.setAction(((MipaTable)tblMipa).getUndoAction());
+        btnUndo.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/de/cismet/lagis/ressource/icons/buttons/undo.png"))); // NOI18N
+        btnUndo.setBorder(null);
+        btnUndo.setBorderPainted(false);
+        btnUndo.setFocusPainted(false);
+        btnUndo.setMaximumSize(new java.awt.Dimension(25, 25));
+        btnUndo.setMinimumSize(new java.awt.Dimension(25, 25));
+        btnUndo.setPreferredSize(new java.awt.Dimension(25, 25));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 3);
+        jPanel3.add(btnUndo, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
