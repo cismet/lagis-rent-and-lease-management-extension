@@ -799,47 +799,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 } else {
                     enableSlaveComponents(isInEditMode);
                 }
-                if ((selectedMiPa.getGeometry() != null)
-                            && !mappingComp.getFeatureCollection().isSelected(selectedMiPa)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("SelectedMipa hat eine Geometry und ist nicht selektiert --> wird selektiert");
-                    }
-                    ignoreFeatureSelectionEvent = true;
-                    mappingComp.getFeatureCollection().select(selectedMiPa);
-                    ignoreFeatureSelectionEvent = false;
-                } else if (selectedMiPa.getGeometry() == null) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(
-                            "Keine Mipa Geometrie vorhanden die selektiert werden kann, prüfe ob eine MiPa Geometrie selektiert ist");
-                    }
-                    final Collection selectedFeatures = mappingComp.getFeatureCollection().getSelectedFeatures();
-                    if (selectedFeatures != null) {
-                        for (final Object currentObject : selectedFeatures) {
-                            if ((currentObject != null) && (currentObject instanceof MiPa)) {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Eine MiPa Geometrie ist selektiert --> deselekt");
-                                }
-                                ignoreFeatureSelectionEvent = true;
-                                mappingComp.getFeatureCollection().unselect((MiPa)currentObject);
-                                ignoreFeatureSelectionEvent = false;
-                            }
-                        }
-                    } else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("selected FeatureCollection ist leer");
-                        }
-                    }
-                } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Die Geometrie des selektierten MiPas kann nicht seleketiert werden ");
-                        log.debug("alreadySelected: " + (mappingComp.getFeatureCollection().isSelected(selectedMiPa))
-                                    + " hasGeometry: " + (selectedMiPa.getGeometry() != null));
-                    }
-                    if (log.isDebugEnabled()) {
-                        log.debug("get Selected Feature: " + mappingComp.getFeatureCollection().getSelectedFeatures());
-                    }
-                }
             }
+            ((MipaTable)tblMipa).valueChanged_updateFeatures(this, e);
         } else {
             btnRemoveMiPa.setEnabled(false);
             deselectAllListEntries();
@@ -1444,14 +1405,14 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddExitingMiPaActionPerformed
+    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddExitingMiPaActionPerformed
         final JDialog dialog = new JDialog(LagisBroker.getInstance().getParentComponent(), "", true);
         dialog.add(new AddExistingMiPaPanel(currentFlurstueck, miPaModel, lstCrossRefs.getModel()));
         dialog.pack();
         dialog.setIconImage(icoExistingContract.getImage());
         dialog.setTitle("Vorhandener Vertrag hinzufügen...");
         StaticSwingTools.showDialog(dialog);
-    }                                                                                     //GEN-LAST:event_btnAddExitingMiPaActionPerformed
+    }//GEN-LAST:event_btnAddExitingMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
