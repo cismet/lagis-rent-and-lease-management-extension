@@ -150,7 +150,6 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private ImageIcon icoExistingContract = new javax.swing.ImageIcon(getClass().getResource(
                 "/de/cismet/lagis/ressource/icons/toolbar/contract.png"));
     private JComboBox cbxAuspraegung = new JComboBox();
-    private boolean ignoreFeatureSelectionEvent = false;
     private final Icon copyDisplayIcon;
 
     private final ActionListener cboAuspraegungsActionListener = new ActionListener() {
@@ -167,6 +166,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
 //                }
             }
         };
+
+    private boolean listenerEnabled = true;
 
     // funktioniert nicht wann wird es ausgelöst ?
 // public void tableChanged(TableModelEvent e) {
@@ -790,47 +791,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 } else {
                     enableSlaveComponents(isInEditMode);
                 }
-                if ((selectedMiPa.getGeometry() != null)
-                            && !mappingComp.getFeatureCollection().isSelected(selectedMiPa)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("SelectedMipa hat eine Geometry und ist nicht selektiert --> wird selektiert");
-                    }
-                    ignoreFeatureSelectionEvent = true;
-                    mappingComp.getFeatureCollection().select(selectedMiPa);
-                    ignoreFeatureSelectionEvent = false;
-                } else if (selectedMiPa.getGeometry() == null) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(
-                            "Keine Mipa Geometrie vorhanden die selektiert werden kann, prüfe ob eine MiPa Geometrie selektiert ist");
-                    }
-                    final Collection selectedFeatures = mappingComp.getFeatureCollection().getSelectedFeatures();
-                    if (selectedFeatures != null) {
-                        for (final Object currentObject : selectedFeatures) {
-                            if ((currentObject != null) && (currentObject instanceof MiPa)) {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Eine MiPa Geometrie ist selektiert --> deselekt");
-                                }
-                                ignoreFeatureSelectionEvent = true;
-                                mappingComp.getFeatureCollection().unselect((MiPa)currentObject);
-                                ignoreFeatureSelectionEvent = false;
-                            }
-                        }
-                    } else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("selected FeatureCollection ist leer");
-                        }
-                    }
-                } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Die Geometrie des selektierten MiPas kann nicht seleketiert werden ");
-                        log.debug("alreadySelected: " + (mappingComp.getFeatureCollection().isSelected(selectedMiPa))
-                                    + " hasGeometry: " + (selectedMiPa.getGeometry() != null));
-                    }
-                    if (log.isDebugEnabled()) {
-                        log.debug("get Selected Feature: " + mappingComp.getFeatureCollection().getSelectedFeatures());
-                    }
-                }
             }
+            valueChanged_updateFeatures(e);
         } else {
             btnRemoveMiPa.setEnabled(false);
             deselectAllListEntries();
@@ -839,6 +801,40 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             return;
         }
         ((JXTable)tblMipa).packAll();
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param  e  DOCUMENT ME!
+     */
+    private void valueChanged_updateFeatures(final ListSelectionEvent e) {
+        if (e.getValueIsAdjusting() == true) {
+            return;
+        }
+
+        this.setFeatureSelectionChangedEnabled(false);
+        final MappingComponent mappingComp = LagisBroker.getInstance().getMappingComponent();
+        final int[] selectedRows = tblMipa.getSelectedRows();
+        boolean firstIteration = true;
+        for (final int row : selectedRows) {
+            final int index = ((JXTable)tblMipa).getFilters().convertRowIndexToModel(row);
+            if ((index != -1)) {
+                final MipaCustomBean selectedMiPa = miPaModel.getMiPaAtRow(index);
+                if ((selectedMiPa.getGeometry() != null)) {
+                    if (firstIteration) {
+                        mappingComp.getFeatureCollection().select(selectedMiPa);
+                        firstIteration = false;
+                    } else {
+                        mappingComp.getFeatureCollection().addToSelection(selectedMiPa);
+                    }
+                } else if (selectedRows.length == 1) { // if the only selected element has no feature
+                    mappingComp.getFeatureCollection().unselectAll();
+                }
+            }
+        }
+
+        this.setFeatureSelectionChangedEnabled(true);
     }
 
     @Override
@@ -997,67 +993,36 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         if (log.isDebugEnabled()) {
             log.debug("FeatureSelectionChanged", new CurrentStackTrace());
         }
-        // knaup
-        if (!ignoreFeatureSelectionEvent) {
-            if (features.size() == 0) {
-                return;
-            }
-            final int[] selectedRows = tblMipa.getSelectedRows();
-            if ((selectedRows != null) && (selectedRows.length > 0)) {
-                for (int i = 0; i < selectedRows.length; i++) {
-                    final int modelIndex = ((JXTable)tblMipa).getFilters().convertRowIndexToModel(selectedRows[i]);
-                    if (modelIndex != -1) {
-                        final MiPa currentMipa = miPaModel.getMiPaAtRow(modelIndex);
-                        if ((currentMipa != null) && (currentMipa.getGeometry() == null)) {
-                            tblMipa.getSelectionModel().removeSelectionInterval(selectedRows[i], selectedRows[i]);
-                        }
-                    }
-                }
-            }
 
-            for (final Feature feature : features) {
-                if (feature instanceof MiPa) {
-                    // TODO Refactor Name
-                    final int index = miPaModel.getIndexOfMiPa((MiPa)feature);
-                    final int displayedIndex = ((JXTable)tblMipa).getFilters().convertRowIndexToView(index);
-                    if ((index != -1)
-                                && LagisBroker.getInstance().getMappingComponent().getFeatureCollection().isSelected(
-                                    feature)) {
-                        // tReBe.changeSelection(((JXTable)tReBe).getFilters().convertRowIndexToView(index),0,false,false);
-                        if (feature.getGeometry() != null) {
-                            // ((SimpleBackgroundedJPanel) this.panBackground).setBackgroundEnabled(true);
-                        } else {
-                            if (log.isDebugEnabled()) {
-                                log.debug("SetBackgroundEnabled abgeschaltet: ", new CurrentStackTrace());
-                            }
-                            // ((SimpleBackgroundedJPanel) this.panBackground).setBackgroundEnabled(false);
-                        }
-                        tblMipa.getSelectionModel().addSelectionInterval(displayedIndex, displayedIndex);
-                        final Rectangle tmp = tblMipa.getCellRect(displayedIndex, 0, true);
-                        if (tmp != null) {
-                            tblMipa.scrollRectToVisible(tmp);
-                        }
-                    } else {
-                        tblMipa.getSelectionModel().removeSelectionInterval(displayedIndex, displayedIndex);
-                        if (log.isDebugEnabled()) {
-                            log.debug("SetBackgroundEnabled abgeschaltet: ", new CurrentStackTrace());
-                        }
-                        // war schon ausdokumentiert
-                        // ((SimpleBackgroundedJPanel) this.panBackground).setBackgroundEnabled(false);
+        if (features.isEmpty()) {
+            return;
+        }
+        tblMipa.getSelectionModel().removeListSelectionListener(this);
+        Feature wrappedFeature;
+        for (final Feature feature : features) {
+            if (feature instanceof StyledFeatureGroupWrapper) {
+                wrappedFeature = ((StyledFeatureGroupWrapper)feature).getFeature();
+            } else {
+                wrappedFeature = feature;
+            }
+            if (wrappedFeature instanceof MipaCustomBean) {
+                // TODO Refactor Name
+                final int index = miPaModel.getIndexOfMiPa((MipaCustomBean)wrappedFeature);
+                final int displayedIndex = ((JXTable)tblMipa).getFilters().convertRowIndexToView(index);
+                if ((index != -1)
+                            && LagisBroker.getInstance().getMappingComponent().getFeatureCollection().isSelected(
+                                feature)) {
+                    tblMipa.getSelectionModel().addSelectionInterval(displayedIndex, displayedIndex);
+                    final Rectangle tmp = tblMipa.getCellRect(displayedIndex, 0, true);
+                    if (tmp != null) {
+                        tblMipa.scrollRectToVisible(tmp);
                     }
                 } else {
-                    tblMipa.clearSelection();
-                    if (log.isDebugEnabled()) {
-                        log.debug("SetBackgroundEnabled abgeschaltet: ", new CurrentStackTrace());
-                    }
-                    // ((SimpleBackgroundedJPanel) this.panBackground).setBackgroundEnabled(false);
+                    tblMipa.getSelectionModel().removeSelectionInterval(displayedIndex, displayedIndex);
                 }
             }
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Aktuelles change event wird ignoriert");
-            }
         }
+        tblMipa.getSelectionModel().addListSelectionListener(this);
     }
 
     @Override
@@ -1702,5 +1667,14 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     @Override
     public boolean knowsDisplayName(final BasicEntity entity) {
         return entity instanceof MiPa;
+    }
+    @Override
+    public boolean isFeatureSelectionChangedEnabled() {
+        return listenerEnabled;
+    }
+
+    @Override
+    public void setFeatureSelectionChangedEnabled(final boolean listenerEnabled) {
+        this.listenerEnabled = listenerEnabled;
     }
 }
