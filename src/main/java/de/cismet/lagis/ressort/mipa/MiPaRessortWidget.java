@@ -815,18 +815,21 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
 
         this.setFeatureSelectionChangedEnabled(false);
         final MappingComponent mappingComp = LagisBroker.getInstance().getMappingComponent();
+        final int[] selectedRows = tblMipa.getSelectedRows();
         boolean firstIteration = true;
-        for (final int row : tblMipa.getSelectedRows()) {
+        for (final int row : selectedRows) {
             final int index = ((JXTable)tblMipa).getFilters().convertRowIndexToModel(row);
             if ((index != -1)) {
-                final MipaCustomBean selectedReBe = miPaModel.getMiPaAtRow(index);
-                if ((selectedReBe.getGeometry() != null)) {
+                final MipaCustomBean selectedMiPa = miPaModel.getMiPaAtRow(index);
+                if ((selectedMiPa.getGeometry() != null)) {
                     if (firstIteration) {
-                        mappingComp.getFeatureCollection().select(selectedReBe);
+                        mappingComp.getFeatureCollection().select(selectedMiPa);
                         firstIteration = false;
                     } else {
-                        mappingComp.getFeatureCollection().addToSelection(selectedReBe);
+                        mappingComp.getFeatureCollection().addToSelection(selectedMiPa);
                     }
+                } else if (selectedRows.length == 1) { // if the only selected element has no feature
+                    mappingComp.getFeatureCollection().unselectAll();
                 }
             }
         }
@@ -1423,18 +1426,18 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnAddMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMiPaActionPerformed
+    private void btnAddMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMiPaActionPerformed
         final MipaCustomBean tmpMiPa = MipaCustomBean.createNew();
         miPaModel.addMiPa(tmpMiPa);
         miPaModel.fireTableDataChanged();
-    }//GEN-LAST:event_btnAddMiPaActionPerformed
+    }                                                                              //GEN-LAST:event_btnAddMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnRemoveMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMiPaActionPerformed
+    private void btnRemoveMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnRemoveMiPaActionPerformed
         final int currentRow = tblMipa.getSelectedRow();
         if (currentRow != -1) {
             // VerwaltungsTableModel currentModel = (VerwaltungsTableModel)tNutzung.getModel();
@@ -1447,21 +1450,21 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 log.debug("liste ausgeschaltet");
             }
         }
-    }//GEN-LAST:event_btnRemoveMiPaActionPerformed
+    } //GEN-LAST:event_btnRemoveMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddExitingMiPaActionPerformed
+    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddExitingMiPaActionPerformed
         final JDialog dialog = new JDialog(LagisBroker.getInstance().getParentComponent(), "", true);
         dialog.add(new AddExistingMiPaPanel(currentFlurstueck, miPaModel, lstCrossRefs.getModel()));
         dialog.pack();
         dialog.setIconImage(icoExistingContract.getImage());
         dialog.setTitle("Vorhandener Vertrag hinzufügen...");
         StaticSwingTools.showDialog(dialog);
-    }//GEN-LAST:event_btnAddExitingMiPaActionPerformed
+    }                                                                                     //GEN-LAST:event_btnAddExitingMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
