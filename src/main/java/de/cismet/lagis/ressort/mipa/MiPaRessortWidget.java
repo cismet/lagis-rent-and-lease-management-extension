@@ -168,6 +168,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             }
         };
 
+    private boolean listenerEnabled = true;
+
     // funktioniert nicht wann wird es ausgelöst ?
 // public void tableChanged(TableModelEvent e) {
 // if (e.getColumn() == 5) {
@@ -1461,18 +1463,18 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnAddMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddMiPaActionPerformed
+    private void btnAddMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMiPaActionPerformed
         final MipaCustomBean tmpMiPa = MipaCustomBean.createNew();
         miPaModel.addMiPa(tmpMiPa);
         miPaModel.fireTableDataChanged();
-    }                                                                              //GEN-LAST:event_btnAddMiPaActionPerformed
+    }//GEN-LAST:event_btnAddMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnRemoveMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnRemoveMiPaActionPerformed
+    private void btnRemoveMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMiPaActionPerformed
         final int currentRow = tblMipa.getSelectedRow();
         if (currentRow != -1) {
             // VerwaltungsTableModel currentModel = (VerwaltungsTableModel)tNutzung.getModel();
@@ -1485,21 +1487,21 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 log.debug("liste ausgeschaltet");
             }
         }
-    } //GEN-LAST:event_btnRemoveMiPaActionPerformed
+    }//GEN-LAST:event_btnRemoveMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddExitingMiPaActionPerformed
+    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddExitingMiPaActionPerformed
         final JDialog dialog = new JDialog(LagisBroker.getInstance().getParentComponent(), "", true);
         dialog.add(new AddExistingMiPaPanel(currentFlurstueck, miPaModel, lstCrossRefs.getModel()));
         dialog.pack();
         dialog.setIconImage(icoExistingContract.getImage());
         dialog.setTitle("Vorhandener Vertrag hinzufügen...");
         StaticSwingTools.showDialog(dialog);
-    }                                                                                     //GEN-LAST:event_btnAddExitingMiPaActionPerformed
+    }//GEN-LAST:event_btnAddExitingMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
@@ -1702,5 +1704,14 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     @Override
     public boolean knowsDisplayName(final BasicEntity entity) {
         return entity instanceof MiPa;
+    }
+    @Override
+    public boolean isFeatureSelectionChangedEnabled() {
+        return listenerEnabled;
+    }
+
+    @Override
+    public void setFeatureSelectionChangedEnabled(final boolean listenerEnabled) {
+        this.listenerEnabled = listenerEnabled;
     }
 }
