@@ -150,7 +150,6 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private ImageIcon icoExistingContract = new javax.swing.ImageIcon(getClass().getResource(
                 "/de/cismet/lagis/ressource/icons/toolbar/contract.png"));
     private JComboBox cbxAuspraegung = new JComboBox();
-    private boolean ignoreFeatureSelectionEvent = false;
     private final Icon copyDisplayIcon;
 
     private final ActionListener cboAuspraegungsActionListener = new ActionListener() {
@@ -792,47 +791,8 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 } else {
                     enableSlaveComponents(isInEditMode);
                 }
-                if ((selectedMiPa.getGeometry() != null)
-                            && !mappingComp.getFeatureCollection().isSelected(selectedMiPa)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("SelectedMipa hat eine Geometry und ist nicht selektiert --> wird selektiert");
-                    }
-                    ignoreFeatureSelectionEvent = true;
-                    mappingComp.getFeatureCollection().select(selectedMiPa);
-                    ignoreFeatureSelectionEvent = false;
-                } else if (selectedMiPa.getGeometry() == null) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(
-                            "Keine Mipa Geometrie vorhanden die selektiert werden kann, prüfe ob eine MiPa Geometrie selektiert ist");
-                    }
-                    final Collection selectedFeatures = mappingComp.getFeatureCollection().getSelectedFeatures();
-                    if (selectedFeatures != null) {
-                        for (final Object currentObject : selectedFeatures) {
-                            if ((currentObject != null) && (currentObject instanceof MiPa)) {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Eine MiPa Geometrie ist selektiert --> deselekt");
-                                }
-                                ignoreFeatureSelectionEvent = true;
-                                mappingComp.getFeatureCollection().unselect((MiPa)currentObject);
-                                ignoreFeatureSelectionEvent = false;
-                            }
-                        }
-                    } else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("selected FeatureCollection ist leer");
-                        }
-                    }
-                } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Die Geometrie des selektierten MiPas kann nicht seleketiert werden ");
-                        log.debug("alreadySelected: " + (mappingComp.getFeatureCollection().isSelected(selectedMiPa))
-                                    + " hasGeometry: " + (selectedMiPa.getGeometry() != null));
-                    }
-                    if (log.isDebugEnabled()) {
-                        log.debug("get Selected Feature: " + mappingComp.getFeatureCollection().getSelectedFeatures());
-                    }
-                }
             }
+            valueChanged_updateFeatures(e);
         } else {
             btnRemoveMiPa.setEnabled(false);
             deselectAllListEntries();
@@ -841,6 +801,37 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
             return;
         }
         ((JXTable)tblMipa).packAll();
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param  e  DOCUMENT ME!
+     */
+    private void valueChanged_updateFeatures(final ListSelectionEvent e) {
+        if (e.getValueIsAdjusting() == true) {
+            return;
+        }
+
+        this.setFeatureSelectionChangedEnabled(false);
+        final MappingComponent mappingComp = LagisBroker.getInstance().getMappingComponent();
+        boolean firstIteration = true;
+        for (final int row : tblMipa.getSelectedRows()) {
+            final int index = ((JXTable)tblMipa).getFilters().convertRowIndexToModel(row);
+            if ((index != -1)) {
+                final MipaCustomBean selectedReBe = miPaModel.getMiPaAtRow(index);
+                if ((selectedReBe.getGeometry() != null)) {
+                    if (firstIteration) {
+                        mappingComp.getFeatureCollection().select(selectedReBe);
+                        firstIteration = false;
+                    } else {
+                        mappingComp.getFeatureCollection().addToSelection(selectedReBe);
+                    }
+                }
+            }
+        }
+
+        this.setFeatureSelectionChangedEnabled(true);
     }
 
     @Override
