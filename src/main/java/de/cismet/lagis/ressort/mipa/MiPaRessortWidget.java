@@ -966,7 +966,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     // HINT If there are problems try to remove/add Listselectionlistener at start/end of Method
     @Override
     public void featureSelectionChanged(final Collection<Feature> features) {
-        ((MipaTable)tblMipa).featureSelectionChanged(this, features);
+        ((MipaTable)tblMipa).featureSelectionChanged(this, features, MipaCustomBean.class);
     }
 
     @Override
