@@ -154,7 +154,6 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
     private ImageIcon icoExistingContract = new javax.swing.ImageIcon(getClass().getResource(
                 "/de/cismet/lagis/ressource/icons/toolbar/contract.png"));
     private JComboBox cbxAuspraegung = new JComboBox();
-    private boolean ignoreFeatureSelectionEvent = false;
     private final Icon copyDisplayIcon;
 
     private final ActionListener cboAuspraegungsActionListener = new ActionListener() {
@@ -812,7 +811,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         }
         ((JXTable)tblMipa).packAll();
     }
-
+    
     @Override
     public int getStatus() {
         if (tblMipa.getCellEditor() != null) {
@@ -1407,14 +1406,14 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
      *
      * @param  evt  DOCUMENT ME!
      */
-    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnAddExitingMiPaActionPerformed
+    private void btnAddExitingMiPaActionPerformed(final java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddExitingMiPaActionPerformed
         final JDialog dialog = new JDialog(LagisBroker.getInstance().getParentComponent(), "", true);
         dialog.add(new AddExistingMiPaPanel(currentFlurstueck, miPaModel, lstCrossRefs.getModel()));
         dialog.pack();
         dialog.setIconImage(icoExistingContract.getImage());
         dialog.setTitle("Vorhandener Vertrag hinzufügen...");
         StaticSwingTools.showDialog(dialog);
-    }                                                                                     //GEN-LAST:event_btnAddExitingMiPaActionPerformed
+    }//GEN-LAST:event_btnAddExitingMiPaActionPerformed
 
     /**
      * DOCUMENT ME!
