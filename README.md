@@ -1,4 +1,4 @@
-lagis-rent-and-lease-management-extension
+lagis-rent-and-lease-management-extension [![Build Status](http://ci.cismet.de/buildStatus/icon?job=lagis-rent-and-lease-management-extension)](https://ci.cismet.de/job/lagis-rent-and-lease-management-extension/)
 =========================================
 
 LagIS extension for the management of renting and leasing.
