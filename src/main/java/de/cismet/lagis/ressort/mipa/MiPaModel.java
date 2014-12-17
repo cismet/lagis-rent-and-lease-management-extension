@@ -37,6 +37,7 @@ import de.cismet.cismap.commons.features.Feature;
 
 import de.cismet.lagis.broker.LagisBroker;
 
+import de.cismet.lagis.models.CidsBeanTableModel_Lagis;
 import de.cismet.lagis.models.documents.SimpleDocumentModel;
 
 import de.cismet.lagisEE.entity.extension.vermietung.MiPa;
@@ -50,7 +51,7 @@ import de.cismet.lagisEE.entity.extension.vermietung.MiPaNutzung;
  * @author   Sebastian Puhl
  * @version  $Revision$, $Date$
  */
-public class MiPaModel extends AbstractTableModel {
+public class MiPaModel extends CidsBeanTableModel_Lagis {
 
     //~ Static fields/initializers ---------------------------------------------
 
@@ -65,6 +66,19 @@ public class MiPaModel extends AbstractTableModel {
             "Vertragsbeginn",
             "Vertragsende",
         };
+
+    private static final Class[] COLUMN_CLASSES = {
+            String.class,
+            String.class,
+            Integer.class,
+            String.class,
+            MiPaKategorie.class,
+            Object.class,
+            String.class,
+            Date.class,
+            Date.class
+        };
+
     public static final int LAGE_COLUMN = 0;
     public static final int AKTENZEICHEN_COLUMN = 1;
     public static final int FLAECHE_COLUMN = 2;
@@ -77,13 +91,9 @@ public class MiPaModel extends AbstractTableModel {
 
     //~ Instance fields --------------------------------------------------------
 
-    Vector<MipaCustomBean> miPas;
-
     private final Logger log = org.apache.log4j.Logger.getLogger(this.getClass());
-    private boolean isInEditMode = false;
     private SimpleDocumentModel bemerkungDocumentModel;
     private MiPa currentSelectedMiPa = null;
-    private DefaultListModel miPaMerkmalsModel;
 
     //~ Constructors -----------------------------------------------------------
 
@@ -91,9 +101,8 @@ public class MiPaModel extends AbstractTableModel {
      * Creates a new MiPaModel object.
      */
     public MiPaModel() {
-        miPas = new Vector<MipaCustomBean>();
+        super(COLUMN_HEADER, COLUMN_CLASSES, MipaCustomBean.class);
         initDocumentModels();
-        miPaMerkmalsModel = new DefaultListModel();
     }
 
     /**
@@ -102,42 +111,21 @@ public class MiPaModel extends AbstractTableModel {
      * @param  miPas  DOCUMENT ME!
      */
     public MiPaModel(final Collection<MipaCustomBean> miPas) {
-        try {
-            this.miPas = new Vector<MipaCustomBean>(miPas);
-        } catch (Exception ex) {
-            log.error("Fehler beim anlegen des Models", ex);
-            this.miPas = new Vector<MipaCustomBean>();
-        }
+        super(COLUMN_HEADER, COLUMN_CLASSES, miPas);
         initDocumentModels();
-        miPaMerkmalsModel = new DefaultListModel();
     }
 
     //~ Methods ----------------------------------------------------------------
 
     @Override
-    public int getColumnCount() {
-        return COLUMN_HEADER.length;
-    }
-
-    @Override
-    public int getRowCount() {
-        return miPas.size();
-    }
-
-    @Override
-    public String getColumnName(final int column) {
-        return COLUMN_HEADER[column];
-    }
-
-    @Override
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         try {
-            if (rowIndex >= miPas.size()) {
-                log.warn("Cannot access row " + rowIndex + ". There are just " + miPas.size() + " rows");
+            if (rowIndex >= getRowCount()) {
+                log.warn("Cannot access row " + rowIndex + ". There are just " + getRowCount() + " rows");
                 return null;
             }
 
-            final MiPa value = miPas.get(rowIndex);
+            final MiPa value = getCidsBeanAtRow(rowIndex);
 
             switch (columnIndex) {
                 case LAGE_COLUMN: {
@@ -200,42 +188,23 @@ public class MiPaModel extends AbstractTableModel {
     /**
      * DOCUMENT ME!
      *
-     * @param  miPa  DOCUMENT ME!
-     */
-    public void addMiPa(final MipaCustomBean miPa) {
-        miPas.add(miPa);
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param   rowIndex  DOCUMENT ME!
-     *
-     * @return  DOCUMENT ME!
-     */
-    public MipaCustomBean getMiPaAtRow(final int rowIndex) {
-        return miPas.get(rowIndex);
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
      * @param  rowIndex  DOCUMENT ME!
      */
-    public void removeMiPa(final int rowIndex) {
-        final MiPa miPa = miPas.get(rowIndex);
+    @Override
+    public void removeCidsBean(final int rowIndex) {
+        final MiPa miPa = getCidsBeanAtRow(rowIndex);
         if ((miPa != null) && (miPa.getGeometry() != null)) {
             LagisBroker.getInstance().getMappingComponent().getFeatureCollection().removeFeature(miPa);
         }
-        miPas.remove(rowIndex);
+        super.removeCidsBean(rowIndex);
     }
 
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        if ((COLUMN_HEADER.length > columnIndex) && (miPas.size() > rowIndex) && isInEditMode
+        if ((COLUMN_HEADER.length > columnIndex) && (getRowCount() > rowIndex) && isInEditMode()
                     && (columnIndex != ALTE_NUTZUNG_COLUMN)) {
             if (columnIndex == AUSPRAEGUNG_COLUMN) {
-                final MiPa currentMiPa = getMiPaAtRow(rowIndex);
+                final MiPa currentMiPa = getCidsBeanAtRow(rowIndex);
                 if ((currentMiPa != null) && (currentMiPa.getMiPaNutzung() != null)
                             && (currentMiPa.getMiPaNutzung().getMiPaKategorie() != null)
                             && ((currentMiPa.getMiPaNutzung().getMiPaKategorie().getHatNummerAlsAuspraegung())
@@ -258,21 +227,12 @@ public class MiPaModel extends AbstractTableModel {
     /**
      * DOCUMENT ME!
      *
-     * @param  isEditable  DOCUMENT ME!
-     */
-    public void setIsInEditMode(final boolean isEditable) {
-        isInEditMode = isEditable;
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
      * @return  DOCUMENT ME!
      */
     public Vector<Feature> getAllMiPaFeatures() {
         final Vector<Feature> tmp = new Vector<Feature>();
-        if (miPas != null) {
-            final Iterator<MipaCustomBean> it = miPas.iterator();
+        if (getCidsBeans() != null) {
+            final Iterator<MipaCustomBean> it = (Iterator<MipaCustomBean>)getCidsBeans().iterator();
             while (it.hasNext()) {
                 final MiPa curMiPa = it.next();
                 if (curMiPa.getGeometry() != null) {
@@ -285,37 +245,10 @@ public class MiPaModel extends AbstractTableModel {
         }
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param  miPas  DOCUMENT ME!
-     */
-    public void refreshTableModel(final Collection<MipaCustomBean> miPas) {
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Refresh des MiPaTableModell");
-            }
-            this.miPas = new Vector<MipaCustomBean>(miPas);
-        } catch (Exception ex) {
-            log.error("Fehler beim refreshen des Models", ex);
-            this.miPas = new Vector<MipaCustomBean>();
-        }
-        fireTableDataChanged();
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @return  DOCUMENT ME!
-     */
-    public Vector<MipaCustomBean> getAllMiPas() {
-        return miPas;
-    }
-
     @Override
     public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
         try {
-            final MiPa value = miPas.get(rowIndex);
+            final MiPa value = getCidsBeanAtRow(rowIndex);
             switch (columnIndex) {
                 case LAGE_COLUMN: {
                     value.setLage((String)aValue);
@@ -414,43 +347,6 @@ public class MiPaModel extends AbstractTableModel {
         }
     }
 
-    @Override
-    public Class<?> getColumnClass(final int columnIndex) {
-        switch (columnIndex) {
-            case LAGE_COLUMN: {
-                return String.class;
-            }
-            case AKTENZEICHEN_COLUMN: {
-                return String.class;
-            }
-            case FLAECHE_COLUMN: {
-                return Integer.class;
-            }
-            case ALTE_NUTZUNG_COLUMN: {
-                return String.class;
-            }
-            case NUTZUNG_COLUMN: {
-                return MiPaKategorie.class;
-            }
-            case AUSPRAEGUNG_COLUMN: {
-                return Object.class;
-            }
-            case NUTZER_COLUMN: {
-                return String.class;
-            }
-            case VERTRAGS_BEGINN_COLUMN: {
-                return Date.class;
-            }
-            case VERTRAGS_ENDE_COLUMN: {
-                return Date.class;
-            }
-            default: {
-                log.warn("Die gewünschte Spalte exitiert nicht, es kann keine Klasse zurück geliefert werden");
-                return null;
-            }
-        }
-    }
-
     /**
      * DOCUMENT ME!
      */
@@ -470,17 +366,6 @@ public class MiPaModel extends AbstractTableModel {
                     }
                 }
             };
-    }
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param   miPa  DOCUMENT ME!
-     *
-     * @return  DOCUMENT ME!
-     */
-    public int getIndexOfMiPa(final MiPa miPa) {
-        return miPas.indexOf(miPa);
     }
 
     /**
