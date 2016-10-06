@@ -14,7 +14,11 @@
     <version>2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>MiPa Ressort Erweiterung</name>
+    <properties>
+        <names.lagis-rent-and-lease-management-extension>LagIS Ressort Erweiterung MiPa</names.lagis-rent-and-lease-management-extension>
+    </properties>
+    <name>${names.lagis-rent-and-lease-management-extension}</name>
+
     <description>!!! description pending !!!</description>
     <licenses>
         <license>
