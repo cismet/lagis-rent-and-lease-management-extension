@@ -124,7 +124,8 @@ public class AddExistingMiPaPanel extends javax.swing.JPanel implements Validati
             if (miPas != null) {
                 // Check if the Contract ist already  added
                 // if(currentFlurstueck != null && currentFlurstueck.getVertraege() != null){
-                final Iterator<MipaCustomBean> it = currentMiPaTabelModel.getAllMiPas().iterator();
+                final Iterator<MipaCustomBean> it = (Iterator<MipaCustomBean>)currentMiPaTabelModel
+                            .getCidsBeans().iterator();
                 while (it.hasNext()) {
                     final MiPa curMiPa = it.next();
                     if (miPas.contains(curMiPa)) {
@@ -272,9 +273,9 @@ public class AddExistingMiPaPanel extends javax.swing.JPanel implements Validati
     private void btnOKActionPerformed(final java.awt.event.ActionEvent evt) { //GEN-FIRST:event_btnOKActionPerformed
         final int[] selectedRows = tblMiPa.getSelectedRows();
         for (int i = 0; i < selectedRows.length; i++) {
-            final MipaCustomBean curMiPa = miPaModel.getMiPaAtRow(((JXTable)tblMiPa).convertRowIndexToModel(
+            final MipaCustomBean curMiPa = miPaModel.getCidsBeanAtRow(((JXTable)tblMiPa).convertRowIndexToModel(
                         selectedRows[i]));
-            currentMiPaTabelModel.addMiPa(curMiPa);
+            currentMiPaTabelModel.addCidsBean(curMiPa);
             currentMiPaTabelModel.fireTableDataChanged();
             final Collection<FlurstueckSchluesselCustomBean> crossRefs = CidsBroker.getInstance()
                         .getCrossReferencesForMiPa(curMiPa);
