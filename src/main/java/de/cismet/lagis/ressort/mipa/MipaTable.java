@@ -56,7 +56,7 @@ public class MipaTable extends AbstractCidsBeanTable_Lagis {
 
     @Override
     protected void removeItem(final int row) {
-        ((MiPaModel)getModel()).removeCidsBean((this.getFilters().convertRowIndexToModel(getSelectedRow())));
+        ((MiPaModel)getModel()).removeCidsBean((this.convertRowIndexToModel(getSelectedRow())));
         removeActionHelper.duringRemoveAction(this);
     }
 }
