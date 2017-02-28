@@ -23,12 +23,10 @@ import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.decorator.Highlighter;
-import org.jdesktop.swingx.decorator.SortOrder;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -43,7 +41,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.DefaultListCellRenderer;
@@ -54,6 +51,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.SortOrder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -110,7 +108,6 @@ import de.cismet.lagisEE.entity.core.hardwired.FlurstueckArt;
 import de.cismet.lagisEE.entity.extension.vermietung.MiPa;
 import de.cismet.lagisEE.entity.extension.vermietung.MiPaKategorie;
 import de.cismet.lagisEE.entity.extension.vermietung.MiPaKategorieAuspraegung;
-import de.cismet.lagisEE.entity.extension.vermietung.MiPaMerkmal;
 import de.cismet.lagisEE.entity.extension.vermietung.MiPaNutzung;
 
 import de.cismet.tools.CurrentStackTrace;
@@ -281,7 +278,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 @Override
                 public boolean isHighlighted(final Component renderer, final ComponentAdapter componentAdapter) {
                     final int displayedIndex = componentAdapter.row;
-                    final int modelIndex = ((JXTable)tblMipa).getFilters().convertRowIndexToModel(displayedIndex);
+                    final int modelIndex = ((JXTable)tblMipa).convertRowIndexToModel(displayedIndex);
                     final MiPa mp = miPaModel.getCidsBeanAtRow(modelIndex);
                     return (mp != null) && (mp.getGeometry() == null);
                 }
@@ -294,7 +291,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 @Override
                 public boolean isHighlighted(final Component renderer, final ComponentAdapter componentAdapter) {
                     final int displayedIndex = componentAdapter.row;
-                    final int modelIndex = ((JXTable)tblMipa).getFilters().convertRowIndexToModel(displayedIndex);
+                    final int modelIndex = ((JXTable)tblMipa).convertRowIndexToModel(displayedIndex);
                     final MiPa mp = miPaModel.getCidsBeanAtRow(modelIndex);
                     return (mp != null) && (mp.getVertragsende() != null) && (mp.getVertragsbeginn() != null)
                                 && (mp.getVertragsende().getTime() < System.currentTimeMillis());
@@ -754,7 +751,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
                 btnRemoveMiPa.setEnabled(false);
             }
 
-            final int index = ((JXTable)tblMipa).getFilters().convertRowIndexToModel(viewIndex);
+            final int index = ((JXTable)tblMipa).convertRowIndexToModel(viewIndex);
             if ((index != -1) && (tblMipa.getSelectedRowCount() <= 1)) {
                 final MiPa selectedMiPa = miPaModel.getCidsBeanAtRow(index);
                 miPaModel.setCurrentSelectedMipa(selectedMiPa);
@@ -863,7 +860,7 @@ public class MiPaRessortWidget extends AbstractWidget implements FlurstueckChang
         // TODO use Constants from Java
         final MerkmalCheckBox checkBox = (MerkmalCheckBox)e.getSource();
         if (tblMipa.getSelectedRow() != -1) {
-            final MiPa miPa = miPaModel.getCidsBeanAtRow(((JXTable)tblMipa).getFilters().convertRowIndexToModel(
+            final MiPa miPa = miPaModel.getCidsBeanAtRow(((JXTable)tblMipa).convertRowIndexToModel(
                         tblMipa.getSelectedRow()));
             if (miPa != null) {
                 Collection<MipaMerkmalCustomBean> merkmale = miPa.getMiPaMerkmal();
