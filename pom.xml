@@ -17,7 +17,7 @@
         <names.lagis-rent-and-lease-management-extension>LagIS Ressort Erweiterung MiPa</names.lagis-rent-and-lease-management-extension>
     </properties>
     
-    <name>${names.lagis-rent-and-lease-management-extension}</name>
+    <name>${names.lagis-rent-and-lease-management-extension} [${project.version}]</name>
     <description>!!! description pending !!!</description>
     
     <scm>
