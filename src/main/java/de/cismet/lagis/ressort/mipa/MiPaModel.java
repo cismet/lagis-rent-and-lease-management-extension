@@ -13,19 +13,11 @@ package de.cismet.lagis.ressort.mipa;
 
 import org.apache.log4j.Logger;
 
-import org.jdesktop.swingx.JXTable;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import java.util.*;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.text.BadLocationException;
 
 import de.cismet.cids.custom.beans.lagis.MipaCustomBean;
@@ -43,7 +35,6 @@ import de.cismet.lagis.models.documents.SimpleDocumentModel;
 import de.cismet.lagisEE.entity.extension.vermietung.MiPa;
 import de.cismet.lagisEE.entity.extension.vermietung.MiPaKategorie;
 import de.cismet.lagisEE.entity.extension.vermietung.MiPaKategorieAuspraegung;
-import de.cismet.lagisEE.entity.extension.vermietung.MiPaNutzung;
 
 /**
  * DOCUMENT ME!
@@ -59,7 +50,6 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
             "Lage",
             "Aktenzeichen",
             "Fläche m²",
-            "Alte Nutzung",
             "Nutzung",
             "Ausprägung",
             "Nutzer",
@@ -71,7 +61,6 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
             String.class,
             String.class,
             Integer.class,
-            String.class,
             MiPaKategorie.class,
             Object.class,
             String.class,
@@ -82,12 +71,11 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
     public static final int LAGE_COLUMN = 0;
     public static final int AKTENZEICHEN_COLUMN = 1;
     public static final int FLAECHE_COLUMN = 2;
-    public static final int ALTE_NUTZUNG_COLUMN = 3;
-    public static final int NUTZUNG_COLUMN = 4;
-    public static final int AUSPRAEGUNG_COLUMN = 5;
-    public static final int NUTZER_COLUMN = 6;
-    public static final int VERTRAGS_BEGINN_COLUMN = 7;
-    public static final int VERTRAGS_ENDE_COLUMN = 8;
+    public static final int NUTZUNG_COLUMN = 3;
+    public static final int AUSPRAEGUNG_COLUMN = 4;
+    public static final int NUTZER_COLUMN = 5;
+    public static final int VERTRAGS_BEGINN_COLUMN = 6;
+    public static final int VERTRAGS_ENDE_COLUMN = 7;
 
     //~ Instance fields --------------------------------------------------------
 
@@ -140,9 +128,6 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
                     } else {
                         return null;
                     }
-                }
-                case ALTE_NUTZUNG_COLUMN: {
-                    return value.getNutzung();
                 }
                 case NUTZUNG_COLUMN: {
                     if (value.getMiPaNutzung() != null) {
@@ -201,8 +186,7 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
 
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        if ((COLUMN_HEADER.length > columnIndex) && (getRowCount() > rowIndex) && isInEditMode()
-                    && (columnIndex != ALTE_NUTZUNG_COLUMN)) {
+        if ((COLUMN_HEADER.length > columnIndex) && (getRowCount() > rowIndex) && isInEditMode()) {
             if (columnIndex == AUSPRAEGUNG_COLUMN) {
                 final MiPa currentMiPa = getCidsBeanAtRow(rowIndex);
                 if ((currentMiPa != null) && (currentMiPa.getMiPaNutzung() != null)
@@ -264,10 +248,6 @@ public class MiPaModel extends CidsBeanTableModel_Lagis {
                     } else {
                         value.setFlaeche(null);
                     }
-                    break;
-                }
-                case ALTE_NUTZUNG_COLUMN: {
-                    value.setNutzung((String)aValue);
                     break;
                 }
                 case NUTZUNG_COLUMN: {
