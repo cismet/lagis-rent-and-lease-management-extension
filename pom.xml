@@ -10,7 +10,7 @@
 
     <groupId>de.cismet.lagis.plugin</groupId>
     <artifactId>mi-pa-ressort-erweiterung</artifactId>
-    <version>6.1-SNAPSHOT</version>
+    <version>6.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -24,7 +24,7 @@
         <connection>https://github.com/cismet/lagis-rent-and-lease-management-extension.git</connection>
         <developerConnection>scm:git:git@github.com:cismet/lagis-rent-and-lease-management-extension.git</developerConnection>
         <url>https://github.com/cismet/lagis-rent-and-lease-management-extension</url>
-        <tag>HEAD</tag>
+        <tag>v6.1</tag>
     </scm>
   
     <issueManagement>
