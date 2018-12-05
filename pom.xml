@@ -10,21 +10,21 @@
 
     <groupId>de.cismet.lagis.plugin</groupId>
     <artifactId>mi-pa-ressort-erweiterung</artifactId>
-    <version>6.0</version>
+    <version>6.1</version>
     <packaging>jar</packaging>
 
     <properties>
         <names.lagis-rent-and-lease-management-extension>LagIS Ressort Erweiterung MiPa</names.lagis-rent-and-lease-management-extension>
     </properties>
     
-    <name>${names.lagis-rent-and-lease-management-extension}</name>
+    <name>${names.lagis-rent-and-lease-management-extension} [${project.version}]</name>
     <description>!!! description pending !!!</description>
     
     <scm>
         <connection>https://github.com/cismet/lagis-rent-and-lease-management-extension.git</connection>
         <developerConnection>scm:git:git@github.com:cismet/lagis-rent-and-lease-management-extension.git</developerConnection>
         <url>https://github.com/cismet/lagis-rent-and-lease-management-extension</url>
-        <tag>v6.0</tag>
+        <tag>v6.1</tag>
     </scm>
   
     <issueManagement>
@@ -51,28 +51,28 @@
             <dependency>
                 <groupId>de.cismet.commons</groupId>
                 <artifactId>cismet-gui-commons</artifactId>
-                <version>6.0</version>
+                <version>6.2.2</version>
                 <scope>provided</scope>
                 <type>jar</type>
             </dependency>
             <dependency>
                 <groupId>de.cismet.commons</groupId>
                 <artifactId>cismet-commons</artifactId>
-                <version>6.0</version>
+                <version>6.4</version>
                 <scope>provided</scope>
                 <type>jar</type>
             </dependency>
             <dependency>
                 <groupId>de.cismet.commons</groupId>
                 <artifactId>cismap-commons</artifactId>
-                <version>6.0</version>
+                <version>6.2</version>
                 <scope>provided</scope>
                 <type>jar</type>
             </dependency>
             <dependency>
                 <groupId>de.cismet.lagis</groupId>
                 <artifactId>lagis-client</artifactId>
-                <version>6.0</version>
+                <version>6.1</version>
                 <type>jar</type>
                 <!--
                     Set scope to provided and optional to true to avoid dependecy cyle in lagis-client
